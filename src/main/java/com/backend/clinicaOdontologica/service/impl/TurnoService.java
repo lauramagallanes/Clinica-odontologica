@@ -3,6 +3,7 @@ package com.backend.clinicaOdontologica.service.impl;
 import com.backend.clinicaOdontologica.dto.entrada.TurnoEntradaDto;
 import com.backend.clinicaOdontologica.dto.salida.PacienteSalidaDto;
 import com.backend.clinicaOdontologica.dto.salida.TurnoSalidaDto;
+import com.backend.clinicaOdontologica.entity.Odontologo;
 import com.backend.clinicaOdontologica.entity.Paciente;
 import com.backend.clinicaOdontologica.entity.Turno;
 import com.backend.clinicaOdontologica.repository.IDao;
@@ -46,11 +47,22 @@ public class TurnoService {
     private void configureMapping() {
         // Le indico que cuando le llega algo del tipo TurnoEntradaDto en este servicio, tiene que transformarlo en un objeto del tipo Turno:
         modelMapper.typeMap(TurnoEntradaDto.class, Turno.class)
-                //invoco un metodo a traves de una clase con :: (referencia al metodo de una clase)
-
-                //INVESTIGAR!! ACÁ SERÍA ALGO DE BUSCAR SOLO LOS ATRIBUTOS QUE ME INTERESA MAPPEAR ENTRADA SALIDA: NOMBRE Y APELLIDO (ROMI)
-                .addMappings(mapper -> mapper.map(TurnoEntradaDto::getPacienteEntradaDto.getNombre, Turno::setPaciente.setNombre))
-                .addMappings(mapper -> mapper.map(TurnoEntradaDto::getOdontologoEntradaDto, Turno::setOdontologo));
+                //Primera Lambda (Nombre):
+                //
+                //turnoEntradaDto -> (String) turnoEntradaDto.getPacienteEntradaDto().getNombre(): Aquí, turnoEntradaDto es el objeto TurnoEntradaDto. Desde este objeto, accedes al objeto PacienteEntradaDto y obtienes el nombre con getNombre(). El cast (String) asegura que el valor obtenido se trate como un String.
+                //(turno, nombre) -> turno.getPaciente().setNombre((String) nombre): Aquí, turno es el objeto de destino, es decir, la entidad Turno. El valor nombre obtenido se asigna al método setNombre del objeto Paciente dentro del Turno.
+                .addMappings(mapper ->
+                        mapper.map(
+                                turnoEntradaDto -> turnoEntradaDto.getPacienteEntradaDto().getNombre(),
+                                (turno, nombre) -> turno.getPaciente().setNombre((String) nombre)
+                        )
+                )
+                .addMappings(mapper ->
+                        mapper.map(
+                                TurnoEntradaDto::getOdontologoEntradaDto,
+                                (turno, odontologo) -> turno.setOdontologo((Odontologo) odontologo)
+                        )
+                );
         modelMapper.typeMap(Turno.class, TurnoSalidaDto.class)
                 .addMappings(mapper -> mapper.map(Turno::getPaciente, TurnoSalidaDto::setPacienteSalidaDto))
                 .addMappings(mapper -> mapper.map(Turno::getOdontologo, TurnoSalidaDto::setOdontologoSalidaDto));
