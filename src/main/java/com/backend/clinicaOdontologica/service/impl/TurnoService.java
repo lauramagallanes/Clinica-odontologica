@@ -1,12 +1,11 @@
 package com.backend.clinicaOdontologica.service.impl;
 
 import com.backend.clinicaOdontologica.dto.entrada.TurnoEntradaDto;
-import com.backend.clinicaOdontologica.dto.salida.PacienteSalidaDto;
 import com.backend.clinicaOdontologica.dto.salida.TurnoSalidaDto;
 import com.backend.clinicaOdontologica.entity.Odontologo;
-import com.backend.clinicaOdontologica.entity.Paciente;
 import com.backend.clinicaOdontologica.entity.Turno;
-import com.backend.clinicaOdontologica.repository.IDao;
+import com.backend.clinicaOdontologica.repository.TurnoRepository;
+import com.backend.clinicaOdontologica.service.ITurnoService;
 import com.backend.clinicaOdontologica.utils.JsonPrinter;
 import com.backend.clinicaOdontologica.utils.LocalDateTimeAdapter;
 import org.modelmapper.ModelMapper;
@@ -17,15 +16,15 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class TurnoService {
+public class TurnoService implements ITurnoService {
     //Usamos slf4j como libreria de logging
     private final Logger LOGGER = LoggerFactory.getLogger(TurnoService.class);
-    private final IDao<Turno> turnoIDao;
+    private final TurnoRepository turnoRepository;
     private final ModelMapper modelMapper;
 
     //cuando defino algo como final, le debo asignar un valor, para eso creamos el constructor--> inyectamos el model mapper en el servicio a través del constructor:
-    public TurnoService(IDao<Turno> turnoIDao, ModelMapper modelMapper) {
-        this.turnoIDao = turnoIDao;
+    public TurnoService(TurnoRepository turnoRepository, ModelMapper modelMapper) {
+        this.turnoRepository = turnoRepository;
         this.modelMapper = modelMapper;
         // llamamos al metodo configureMapping que creamos abajo:
         configureMapping();
@@ -33,13 +32,19 @@ public class TurnoService {
     }
 
     @Override
+    public TurnoSalidaDto registrarTurno(TurnoEntradaDto turno) {
+        //Hay que terminar de armarlo
+        return null;
+    }
+
+    @Override
     public List<TurnoSalidaDto> listarTurnos() {
-        List<TurnoSalidaDto> turnoSalidaDtos = turnoIDao.listarTodos()
+        List<TurnoSalidaDto> turnoSalidaDtos = turnoRepository.findAll()
                 .stream()
                 .map(turno -> modelMapper.map(turno, TurnoSalidaDto.class))
                 .toList();
-        //ACÁ NO SE MY BIEN COMO SE PONDRÍA (ROMI):
-        LOGGER.info("Listado de todos los turnos: {}", LocalDateTimeAdapter.deserialize(turnoSalidaDtos));
+        //ACÁ NO SE MY BIEN COMO SE PONDRÍA (ROMI): //Ahi lo arreglé, va con JsonPrinter.toString
+        LOGGER.info("Listado de todos los turnos: {}", JsonPrinter.toString(turnoSalidaDtos));
         return turnoSalidaDtos;
     }
 
