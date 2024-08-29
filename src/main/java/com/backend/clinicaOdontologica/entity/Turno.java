@@ -1,17 +1,21 @@
 package com.backend.clinicaOdontologica.entity;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "TURNOS")
 public class Turno {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private Paciente paciente;
     private Odontologo odontologo;
     private LocalDateTime fechaHora;
 
-    public Turno(Long id, Paciente paciente, Odontologo odontologo, LocalDateTime fechaHora) {
-        this.id = id;
-        this.paciente = paciente;
-        this.odontologo = odontologo;
-        this.fechaHora = fechaHora;
+    public Turno() {
+
     }
 
     public Turno(Paciente paciente, Odontologo odontologo, LocalDateTime fechaHora) {
