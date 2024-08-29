@@ -3,7 +3,7 @@ package com.backend.clinicaOdontologica.service.impl;
 import com.backend.clinicaOdontologica.dto.entrada.OdontologoEntradaDto;
 import com.backend.clinicaOdontologica.dto.salida.OdontologoSalidaDto;
 import com.backend.clinicaOdontologica.entity.Odontologo;
-import com.backend.clinicaOdontologica.repository.impl.OdontologoDaoH2;
+import com.backend.clinicaOdontologica.repository.OdontologoRepository;
 import com.backend.clinicaOdontologica.service.IOdontologoService;
 import com.backend.clinicaOdontologica.utils.JsonPrinter;
 import org.modelmapper.ModelMapper;
@@ -16,13 +16,13 @@ import java.util.List;
 @Service
 public class OdontologoService implements IOdontologoService {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(OdontologoDaoH2.class);
-    private IDao<Odontologo> odontologoIDao;
+    private final Logger LOGGER = LoggerFactory.getLogger(OdontologoService.class);
+    private OdontologoRepository odontologoRepository;
     private final ModelMapper modelMapper;
 
-    public OdontologoService(ModelMapper modelMapper, IDao<Odontologo> odontologoIDao) {
+    public OdontologoService(OdontologoRepository odontologoRepository, ModelMapper modelMapper) {
+        this.odontologoRepository = odontologoRepository;
         this.modelMapper = modelMapper;
-        this.odontologoIDao = odontologoIDao;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class OdontologoService implements IOdontologoService {
         // voy a transformar el Dto OdontologoEntradaDto que recibo en un objeto Odontologo a través del mapper:
         Odontologo entidadOdontologo = modelMapper.map(odontologo, Odontologo.class);
         LOGGER.info("EntidadOdontologo: {}", JsonPrinter.toString(entidadOdontologo));
-        Odontologo odontologoRegistrado = odontologoIDao.registrar(entidadOdontologo);
+        Odontologo odontologoRegistrado = odontologoRepository.save(entidadOdontologo);
         LOGGER.info("OdontologoRegistrado: {}", JsonPrinter.toString(odontologoRegistrado));
         OdontologoSalidaDto odontologoSalidaDto = modelMapper.map(odontologoRegistrado, OdontologoSalidaDto.class);
         LOGGER.info("OdontologoSalidaDto: {}", JsonPrinter.toString(odontologoSalidaDto));
@@ -41,7 +41,7 @@ public class OdontologoService implements IOdontologoService {
 
     @Override
     public List<OdontologoSalidaDto> listarOdontologos() {
-        List<OdontologoSalidaDto> odontologoSalidaDtos = odontologoIDao.listarTodos()
+        List<OdontologoSalidaDto> odontologoSalidaDtos = odontologoRepository.findAll()
                 .stream()
                 .map(odontologo -> modelMapper.map(odontologo, OdontologoSalidaDto.class))
                 .toList();
