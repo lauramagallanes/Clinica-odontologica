@@ -1,13 +1,9 @@
 package com.backend.clinicaOdontologica.service.impl;
 
 import com.backend.clinicaOdontologica.dto.entrada.TurnoEntradaDto;
-import com.backend.clinicaOdontologica.dto.salida.PacienteSalidaDto;
 import com.backend.clinicaOdontologica.dto.salida.TurnoSalidaDto;
 import com.backend.clinicaOdontologica.entity.Odontologo;
-import com.backend.clinicaOdontologica.entity.Paciente;
 import com.backend.clinicaOdontologica.entity.Turno;
-import com.backend.clinicaOdontologica.repository.IDao;
-import com.backend.clinicaOdontologica.utils.JsonPrinter;
 import com.backend.clinicaOdontologica.utils.LocalDateTimeAdapter;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
