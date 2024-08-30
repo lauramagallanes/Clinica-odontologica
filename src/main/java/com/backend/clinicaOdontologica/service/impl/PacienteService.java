@@ -46,7 +46,14 @@ public class PacienteService implements IPacienteService {
 
     @Override
     public PacienteSalidaDto buscarPacientePorId(Long id) {
-        return null;
+        Paciente pacienteBuscado = pacienteRepository.findById(id).orElse(null);
+        LOGGER.info("Paciente buscado: {}", JsonPrinter.toString(pacienteBuscado));
+        PacienteSalidaDto pacienteEncontrado = null;
+        if (pacienteBuscado !=null){
+            pacienteEncontrado= modelMapper.map(pacienteBuscado, PacienteSalidaDto.class);
+            LOGGER.info("Paciente encontroado: {}", JsonPrinter.toString(pacienteEncontrado));
+        } else LOGGER.error("No se ha encontrado el paciente con id {}", id);
+        return pacienteEncontrado;
     }
 
     @Override
@@ -72,7 +79,22 @@ public class PacienteService implements IPacienteService {
 
     @Override
     public PacienteSalidaDto actualizarPaciente(PacienteEntradaDto pacienteEntradaDto, Long id) {
-        return null;
+        //busco al paciente a actualizar en la base de datos
+        Paciente pacienteAActualizar = pacienteRepository.findById(id).orElse(null); //podria usar el metodo de buscar por id que creamos antes ya que tiene los loggs
+        //mapeo el pacienteEntradaDto que es lo que me llega por parametro para castearlo a una entity (Paciente)
+        Paciente pacienteRecibido = modelMapper.map(pacienteEntradaDto, Paciente.class);
+
+        PacienteSalidaDto pacienteSalidaDto = null;
+        if (pacienteAActualizar != null){
+            // seteo la id de pacienteRecibido usando la id de pacienteAActualizar
+            pacienteRecibido.setId(pacienteAActualizar.getId());
+            pacienteRecibido.getDomicilio().setId(pacienteAActualizar.getDomicilio().getId());
+            pacienteAActualizar = pacienteRecibido; //asi me evisto hacer los setters para cada atributo
+            pacienteRepository.save(pacienteAActualizar);
+        }else {
+            LOGGER.error("No fue posible actualizar el paciente por que no se encuentra en nuestra base de datos");
+        }
+        return pacienteSalidaDto;
     }
 
     private void configureMapping(){

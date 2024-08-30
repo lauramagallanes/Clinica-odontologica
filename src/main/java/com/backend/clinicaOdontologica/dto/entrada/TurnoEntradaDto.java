@@ -12,21 +12,22 @@ import java.time.LocalDateTime;
 
 public class TurnoEntradaDto {
 
-    @NotNull(message = "El paciente no puede ser nulo")
-    @NotBlank(message = "Debe especificarse el paciente")
+    //@NotNull(message = "El paciente no puede ser nulo")
+    @NotNull(message = "Debe especificarse el paciente")
     @Valid
     private PacienteEntradaDto pacienteEntradaDto;
 
-    @NotNull(message = "El odontologo no puede ser nulo")
-    @NotBlank(message = "Debe especificarse el odontologo")
+    //@NotNull(message = "El odontologo no puede ser nulo")
+    @NotNull(message = "Debe especificarse el odontologo")
     @Valid
     private OdontologoEntradaDto odontologoEntradaDto;
-
+    //FutureOrPresent toma en cuenta solo fecha u hora tambien?
     @FutureOrPresent(message = "La fecha no puede ser anterior al día de hoy")
     @NotNull(message = "Debe especificarse la fecha del turno")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime fechaHora;
 
+    //Tienen que ir todos los datos de paciente y odontologo? Hacer nuevo DTO con solo nombres
     public TurnoEntradaDto(PacienteEntradaDto pacienteEntradaDto, OdontologoEntradaDto odontologoEntradaDto, LocalDateTime fechaHora) {
         this.pacienteEntradaDto = pacienteEntradaDto;
         this.odontologoEntradaDto = odontologoEntradaDto;
