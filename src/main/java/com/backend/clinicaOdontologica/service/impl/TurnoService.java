@@ -1,13 +1,14 @@
 package com.backend.clinicaOdontologica.service.impl;
 
 import com.backend.clinicaOdontologica.dto.entrada.TurnoEntradaDto;
+import com.backend.clinicaOdontologica.dto.salida.PacienteSalidaDto;
 import com.backend.clinicaOdontologica.dto.salida.TurnoSalidaDto;
 import com.backend.clinicaOdontologica.entity.Odontologo;
+import com.backend.clinicaOdontologica.entity.Paciente;
 import com.backend.clinicaOdontologica.entity.Turno;
 import com.backend.clinicaOdontologica.repository.TurnoRepository;
 import com.backend.clinicaOdontologica.service.ITurnoService;
 import com.backend.clinicaOdontologica.utils.JsonPrinter;
-import com.backend.clinicaOdontologica.utils.LocalDateTimeAdapter;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,8 +34,21 @@ public class TurnoService implements ITurnoService {
 
     @Override
     public TurnoSalidaDto registrarTurno(TurnoEntradaDto turno) {
-        //Hay que terminar de armarlo
+        //Hay que terminar de armarlo ESTO LO DEJÉ ASÍ PORQ NO ESTABA INDICADO HACER (ROMI)
         return null;
+    }
+
+    @Override
+    public TurnoSalidaDto buscarTurnoPorId(Long id) {
+        Turno turnoBuscado = turnoRepository.findById(id).orElse(null);
+        LOGGER.info("Turno buscado: {}", JsonPrinter.toString(turnoBuscado));
+        TurnoSalidaDto turnoEncontrado = null;
+        if (turnoBuscado !=null){
+            turnoEncontrado= modelMapper.map(turnoBuscado, TurnoSalidaDto.class);
+            LOGGER.info("Turno encontroado: {}", JsonPrinter.toString(turnoEncontrado));
+        }
+        else LOGGER.error("No se ha encontrado el turno con id {}", id);
+        return turnoEncontrado;
     }
 
     @Override
@@ -46,6 +60,38 @@ public class TurnoService implements ITurnoService {
         //ACÁ NO SE MY BIEN COMO SE PONDRÍA (ROMI): //Ahi lo arreglé, va con JsonPrinter.toString
         LOGGER.info("Listado de todos los turnos: {}", JsonPrinter.toString(turnoSalidaDtos));
         return turnoSalidaDtos;
+    }
+
+    @Override
+    public void eliminarTurno(Long id) {
+        if (buscarTurnoPorId(id) != null) {
+            //llamada a la capa repositorio para eliminar
+            turnoRepository.deleteById(id);
+            LOGGER.warn("Se ha eliminado el turno con id {}", id);
+        } else {
+            //Excepcion
+        }
+    }
+
+    @Override
+    public TurnoSalidaDto actualizarTurno(TurnoEntradaDto turnoEntradaDto, Long id) {
+        //busco el turno a actualizar en la base de datos
+        Turno turnoAActualizar = turnoRepository.findById(id).orElse(null); //podria usar el metodo de buscar por id que creamos antes ya que tiene los loggs
+        //mapeo el turnoEntradaDto que es lo que me llega por parametro para castearlo a una entity (Turno)
+        Turno turnoRecibido = modelMapper.map(turnoEntradaDto, Turno.class);
+
+        TurnoSalidaDto turnoSalidaDto = null;
+        if (turnoAActualizar != null) {
+            // seteo la id de turnoRecibido usando la id de turnoAActualizar
+            turnoRecibido.setId(turnoAActualizar.getId());
+//VER SI CORRESPONDE PONER ALGO DE ODONTOLOGO O PACIENTE (ROMI)
+            turnoAActualizar = turnoRecibido; //asi me evisto hacer los setters para cada atributo
+            turnoRepository.save(turnoAActualizar);
+        } else {
+            LOGGER.error("No fue posible actualizar el turno por que no se encuentra en nuestra base de datos");
+        }
+        return turnoSalidaDto;
+
     }
 
 

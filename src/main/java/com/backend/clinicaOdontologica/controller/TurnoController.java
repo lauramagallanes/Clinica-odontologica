@@ -1,11 +1,8 @@
 package com.backend.clinicaOdontologica.controller;
 
-import com.backend.clinicaOdontologica.dto.entrada.PacienteEntradaDto;
+
 import com.backend.clinicaOdontologica.dto.entrada.TurnoEntradaDto;
-import com.backend.clinicaOdontologica.dto.salida.PacienteSalidaDto;
 import com.backend.clinicaOdontologica.dto.salida.TurnoSalidaDto;
-import com.backend.clinicaOdontologica.entity.Turno;
-import com.backend.clinicaOdontologica.service.IPacienteService;
 import com.backend.clinicaOdontologica.service.ITurnoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,4 +37,23 @@ import java.util.List;
         public ResponseEntity<List<TurnoSalidaDto>>  listarPacientes(){
             return new ResponseEntity<>(turnoService.listarTurnos(), HttpStatus.OK);
         }
-}
+
+         @GetMapping("/{id}")//localhost:8080/turnos/x
+         public ResponseEntity<TurnoSalidaDto> buscarTurnoPorId(@PathVariable Long id){
+            return new ResponseEntity<>(turnoService.buscarTurnoPorId(id), HttpStatus.OK);
+        }
+
+        //PUT -- actualización completa del objeto
+
+        @PutMapping("/actualizar/{id}")
+        public ResponseEntity<TurnoSalidaDto> actualizarTurno(@RequestBody @Valid TurnoEntradaDto turno, @PathVariable Long id){
+            return new ResponseEntity<>(turnoService.actualizarTurno(turno, id), HttpStatus.OK);
+        }
+
+        //DELETE
+        @DeleteMapping("/eliminar")//localhost:8080/turnos/eliminar?id=x
+        public ResponseEntity<String> eliminarTurno(@RequestParam Long id){
+            turnoService.eliminarTurno(id);
+            return new ResponseEntity<>("Turno eliminado correctamente", HttpStatus.NO_CONTENT);
+        }
+    }
