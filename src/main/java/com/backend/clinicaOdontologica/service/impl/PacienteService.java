@@ -89,7 +89,7 @@ public class PacienteService implements IPacienteService {
             // seteo la id de pacienteRecibido usando la id de pacienteAActualizar
             pacienteRecibido.setId(pacienteAActualizar.getId());
             pacienteRecibido.getDomicilio().setId(pacienteAActualizar.getDomicilio().getId());
-            pacienteAActualizar = pacienteRecibido; //asi me evisto hacer los setters para cada atributo
+            pacienteAActualizar = pacienteRecibido; //asi me evito hacer los setters para cada atributo
             pacienteRepository.save(pacienteAActualizar);
         }else {
             LOGGER.error("No fue posible actualizar el paciente por que no se encuentra en nuestra base de datos");

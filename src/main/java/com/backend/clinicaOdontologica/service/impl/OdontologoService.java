@@ -1,8 +1,11 @@
 package com.backend.clinicaOdontologica.service.impl;
 
 import com.backend.clinicaOdontologica.dto.entrada.OdontologoEntradaDto;
+import com.backend.clinicaOdontologica.dto.entrada.PacienteEntradaDto;
 import com.backend.clinicaOdontologica.dto.salida.OdontologoSalidaDto;
+import com.backend.clinicaOdontologica.dto.salida.PacienteSalidaDto;
 import com.backend.clinicaOdontologica.entity.Odontologo;
+import com.backend.clinicaOdontologica.entity.Paciente;
 import com.backend.clinicaOdontologica.repository.OdontologoRepository;
 import com.backend.clinicaOdontologica.service.IOdontologoService;
 import com.backend.clinicaOdontologica.utils.JsonPrinter;
@@ -40,6 +43,19 @@ public class OdontologoService implements IOdontologoService {
     }
 
     @Override
+    public OdontologoSalidaDto buscarOdontologoPorId(Long id) {
+        Odontologo odontologoBuscado = odontologoRepository.findById(id).orElse(null);
+        LOGGER.info("Odontologo buscado: {}", JsonPrinter.toString(odontologoBuscado));
+        OdontologoSalidaDto odontologoEncontrado= null;
+        if(odontologoBuscado != null){
+            odontologoEncontrado = modelMapper.map(odontologoBuscado, OdontologoSalidaDto.class);
+            LOGGER.info("Odontologo encontroado: {}", JsonPrinter.toString(odontologoEncontrado));
+        } else LOGGER.error("No se ha encontrado el odontologo con id {}", id);
+
+        return odontologoEncontrado;
+    }
+
+    @Override
     public List<OdontologoSalidaDto> listarOdontologos() {
         List<OdontologoSalidaDto> odontologoSalidaDtos = odontologoRepository.findAll()
                 .stream()
@@ -48,4 +64,32 @@ public class OdontologoService implements IOdontologoService {
         LOGGER.info("Listado de todos los odontologos: {}", JsonPrinter.toString(odontologoSalidaDtos));
         return odontologoSalidaDtos;
     }
+
+    @Override
+    public void eliminarOdontologo(Long id) {
+        if(buscarOdontologoPorId(id) != null){
+            odontologoRepository.deleteById(id);
+            LOGGER.warn("Se ha eliminado el odontólogo con id {}", id);
+        } else {
+        //Excepcion
+        }
+    }
+
+    @Override
+    public OdontologoSalidaDto actualizarOdontologo(OdontologoEntradaDto odontologoEntradaDto, Long id) {
+        Odontologo odontologoAActualizar = odontologoRepository.findById(id).orElse(null);
+        Odontologo odontologoRecibido = modelMapper.map(odontologoEntradaDto, Odontologo.class);
+
+        OdontologoSalidaDto odontologoSalidaDto = null;
+        if (odontologoAActualizar != null){
+            odontologoRecibido.setId(odontologoAActualizar.getId());
+            odontologoAActualizar = odontologoRecibido;
+            odontologoRepository.save(odontologoAActualizar);
+        } else {
+            LOGGER.error("No fue posible actualizar el odontólogo por que no se encuentra en nuestra base de datos");
+        }
+        return odontologoSalidaDto;
+    }
+
+
 }
