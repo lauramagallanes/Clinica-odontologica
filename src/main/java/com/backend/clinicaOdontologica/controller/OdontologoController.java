@@ -49,12 +49,12 @@ public class OdontologoController {
     @PutMapping("/actualizar/{id}")
     public ResponseEntity<OdontologoSalidaDto> actualizarOdontologo(@RequestBody @Valid OdontologoEntradaDto odontologo, @PathVariable Long id){
         return new ResponseEntity<>(odontologoService.actualizarOdontologo(odontologo, id), HttpStatus.OK);
-    }
+    } //COMO LO PRUEBO EN POSTMAN?
 
     //DELETE
     @DeleteMapping("/eliminar")//localhost:8080/pacientes/eliminar?id=x
     public ResponseEntity<String> eliminarOdontologo(@RequestParam Long id){
         odontologoService.eliminarOdontologo(id);
-        return new ResponseEntity<>("Odontólogo eliminado correctamente", HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("Odontólogo eliminado correctamente", HttpStatus.NO_CONTENT); //funciona el endpoint pero no me esta mostrando este mensaje en consola
     }
 }

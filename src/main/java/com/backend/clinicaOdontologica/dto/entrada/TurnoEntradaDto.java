@@ -15,7 +15,7 @@ public class TurnoEntradaDto {
     //@NotNull(message = "El paciente no puede ser nulo")
     @NotNull(message = "Debe especificarse el paciente")
     @Valid
-    private PacienteEntradaDto pacienteEntradaDto;
+    private PacienteEntradaDto pacienteEntradaDto; //podriamos usar un DTO que tenga solo el nombre del paciente
 
     //@NotNull(message = "El odontologo no puede ser nulo")
     @NotNull(message = "Debe especificarse el odontologo")
