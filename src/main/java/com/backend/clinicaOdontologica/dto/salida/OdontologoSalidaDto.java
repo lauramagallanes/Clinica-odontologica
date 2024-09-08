@@ -2,18 +2,18 @@ package com.backend.clinicaOdontologica.dto.salida;
 
 public class OdontologoSalidaDto {
     private Long id;
-    private int numero_matricula;
-    private String nombre;
-    private String apellido;
+    private int numeroMatricula;
+    private String nombreOdontologo;
+    private String apellidoOdontologo;
 
     public OdontologoSalidaDto() {
     }
 
-    public OdontologoSalidaDto(Long id, int numero_matricula, String nombre, String apellido) {
+    public OdontologoSalidaDto(Long id, int numeroMatricula, String nombreOdontologo, String apellidoOdontologo) {
         this.id = id;
-        this.numero_matricula = numero_matricula;
-        this.nombre = nombre;
-        this.apellido = apellido;
+        this.numeroMatricula = numeroMatricula;
+        this.nombreOdontologo = nombreOdontologo;
+        this.apellidoOdontologo = apellidoOdontologo;
     }
 
     public Long getId() {
@@ -24,27 +24,27 @@ public class OdontologoSalidaDto {
         this.id = id;
     }
 
-    public int getNumero_matricula() {
-        return numero_matricula;
+    public int getNumeroMatricula() {
+        return numeroMatricula;
     }
 
-    public void setNumero_matricula(int numero_matricula) {
-        this.numero_matricula = numero_matricula;
+    public void setNumeroMatricula(int numeroMatricula) {
+        this.numeroMatricula = numeroMatricula;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getNombreOdontologo() {
+        return nombreOdontologo;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setNombreOdontologo(String nombreOdontologo) {
+        this.nombreOdontologo = nombreOdontologo;
     }
 
-    public String getApellido() {
-        return apellido;
+    public String getApellidoOdontologo() {
+        return apellidoOdontologo;
     }
 
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
+    public void setApellidoOdontologo(String apellidoOdontologo) {
+        this.apellidoOdontologo = apellidoOdontologo;
     }
 }

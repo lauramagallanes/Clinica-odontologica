@@ -6,8 +6,8 @@ import java.time.LocalDate;
 
 public class PacienteSalidaDto {
     private Long id;
-    private String nombre;
-    private String apellido;
+    private String nombrePaciente;
+    private String apellidoPaciente;
     private int dni;
     private LocalDate fechaIngreso;
     private DomicilioSalidaDto domicilioSalidaDto;
@@ -15,10 +15,10 @@ public class PacienteSalidaDto {
     public PacienteSalidaDto() {
     }
 
-    public PacienteSalidaDto(Long id, String nombre, String apellido, int dni, LocalDate fechaIngreso, DomicilioSalidaDto domicilioSalidaDto) {
+    public PacienteSalidaDto(Long id, String nombrePaciente, String apellidoPaciente, int dni, LocalDate fechaIngreso, DomicilioSalidaDto domicilioSalidaDto) {
         this.id = id;
-        this.nombre = nombre;
-        this.apellido = apellido;
+        this.nombrePaciente = nombrePaciente;
+        this.apellidoPaciente = apellidoPaciente;
         this.dni = dni;
         this.fechaIngreso = fechaIngreso;
         this.domicilioSalidaDto = domicilioSalidaDto;
@@ -32,20 +32,20 @@ public class PacienteSalidaDto {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getNombrePaciente() {
+        return nombrePaciente;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setNombrePaciente(String nombrePaciente) {
+        this.nombrePaciente = nombrePaciente;
     }
 
-    public String getApellido() {
-        return apellido;
+    public String getApellidoPaciente() {
+        return apellidoPaciente;
     }
 
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
+    public void setApellidoPaciente(String apellidoPaciente) {
+        this.apellidoPaciente = apellidoPaciente;
     }
 
     public int getDni() {

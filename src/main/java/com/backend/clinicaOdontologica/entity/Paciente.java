@@ -12,13 +12,14 @@ public class Paciente {
     private Long id;
 
     @Column(length = 30, nullable = false)
-    private String nombre;
+    private String nombrePaciente;
 
     @Column(length = 30, nullable = false)
-    private String apellido;
+    private String apellidoPaciente;
 
     @Column(length = 30, nullable = false)
     private int dni;
+
     private LocalDate fechaIngreso;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -29,10 +30,10 @@ public class Paciente {
 
     }
 
-    public Paciente(Long id, String nombre, String apellido, int dni, LocalDate fechaIngreso, Domicilio domicilio) {
+    public Paciente(Long id, String nombrePaciente, String apellidoPaciente, int dni, LocalDate fechaIngreso, Domicilio domicilio) {
         this.id = id;
-        this.nombre = nombre;
-        this.apellido = apellido;
+        this.nombrePaciente = nombrePaciente;
+        this.apellidoPaciente = apellidoPaciente;
         this.dni = dni;
         this.fechaIngreso = fechaIngreso;
         this.domicilio = domicilio;
@@ -46,20 +47,20 @@ public class Paciente {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getNombrePaciente() {
+        return nombrePaciente;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setNombrePaciente(String nombrePaciente) {
+        this.nombrePaciente = nombrePaciente;
     }
 
-    public String getApellido() {
-        return apellido;
+    public String getApellidoPaciente() {
+        return apellidoPaciente;
     }
 
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
+    public void setApellidoPaciente(String apellidoPaciente) {
+        this.apellidoPaciente = apellidoPaciente;
     }
 
     public int getDni() {
