@@ -18,7 +18,7 @@ function listarOdontologos(){
 }
 
 function renderizarOdontologos(listado){
-    const listadoOdontologos = document.querySelector("#odontologos") /
+    const listadoOdontologos = document.querySelector("#odontologos")
     listadoOdontologos.innerHTML = ""
     let odontologo;
     listado.forEach(function(odontologo){
