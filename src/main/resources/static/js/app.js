@@ -23,7 +23,7 @@ function renderizarOdontologos(listado){
     let odontologo;
     listado.forEach(function(odontologo){
     console.log(odontologo)
-    odontologo = `<li><p>${odontologo.nombre} ${odontologo.apellido} </p></li>`
+    odontologo = `<li><p>${odontologo.nombreOdontologo} ${odontologo.apellidoOdontologo} </p></li>`
     listadoOdontologos.innerHTML += odontologo;
 })
 }
