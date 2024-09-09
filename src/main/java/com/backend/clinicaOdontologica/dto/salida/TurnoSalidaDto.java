@@ -6,17 +6,23 @@ import com.backend.clinicaOdontologica.entity.Paciente;
 import java.time.LocalDateTime;
 
 public class TurnoSalidaDto {
-
+    // a la salida le voy a mostrar al paciente su nombre y apellido, ya que es mas visual (romi)
     private Long id;
-    private PacienteSalidaDto pacienteSalidaDto;
-    private OdontologoSalidaDto odontologoSalidaDto;
+    private String nombrePacienteSalidaDto;
+    private String apellidoPacienteSalidaDto;
+    private String nombreOdontologoSalidaDto;
+    private String apellidoOdontologoSalidaDto;
     private LocalDateTime fechaHora;
 
+    public TurnoSalidaDto() {
+    }
 
-    public TurnoSalidaDto(Long id, PacienteSalidaDto pacienteSalidaDto, OdontologoSalidaDto odontologoSalidaDto, LocalDateTime fechaHora) {
+    public TurnoSalidaDto(Long id, String nombrePacienteSalidaDto, String apellidoPacienteSalidaDto, String nombreOdontologoSalidaDto, String apellidoOdontologoSalidaDto, LocalDateTime fechaHora) {
         this.id = id;
-        this.pacienteSalidaDto = pacienteSalidaDto;
-        this.odontologoSalidaDto = odontologoSalidaDto;
+        this.nombrePacienteSalidaDto = nombrePacienteSalidaDto;
+        this.apellidoPacienteSalidaDto = apellidoPacienteSalidaDto;
+        this.nombreOdontologoSalidaDto = nombreOdontologoSalidaDto;
+        this.apellidoOdontologoSalidaDto = apellidoOdontologoSalidaDto;
         this.fechaHora = fechaHora;
     }
 
@@ -28,20 +34,36 @@ public class TurnoSalidaDto {
         this.id = id;
     }
 
-    public PacienteSalidaDto getPacienteSalidaDto() {
-        return pacienteSalidaDto;
+    public String getNombrePacienteSalidaDto() {
+        return nombrePacienteSalidaDto;
     }
 
-    public void setPacienteSalidaDto(PacienteSalidaDto pacienteSalidaDto) {
-        this.pacienteSalidaDto = pacienteSalidaDto;
+    public void setNombrePacienteSalidaDto(String nombrePacienteSalidaDto) {
+        this.nombrePacienteSalidaDto = nombrePacienteSalidaDto;
     }
 
-    public OdontologoSalidaDto getOdontologoSalidaDto() {
-        return odontologoSalidaDto;
+    public String getApellidoPacienteSalidaDto() {
+        return apellidoPacienteSalidaDto;
     }
 
-    public void setOdontologoSalidaDto(OdontologoSalidaDto odontologoSalidaDto) {
-        this.odontologoSalidaDto = odontologoSalidaDto;
+    public void setApellidoPacienteSalidaDto(String apellidoPacienteSalidaDto) {
+        this.apellidoPacienteSalidaDto = apellidoPacienteSalidaDto;
+    }
+
+    public String getNombreOdontologoSalidaDto() {
+        return nombreOdontologoSalidaDto;
+    }
+
+    public void setNombreOdontologoSalidaDto(String nombreOdontologoSalidaDto) {
+        this.nombreOdontologoSalidaDto = nombreOdontologoSalidaDto;
+    }
+
+    public String getApellidoOdontologoSalidaDto() {
+        return apellidoOdontologoSalidaDto;
+    }
+
+    public void setApellidoOdontologoSalidaDto(String apellidoOdontologoSalidaDto) {
+        this.apellidoOdontologoSalidaDto = apellidoOdontologoSalidaDto;
     }
 
     public LocalDateTime getFechaHora() {
@@ -52,5 +74,3 @@ public class TurnoSalidaDto {
         this.fechaHora = fechaHora;
     }
 }
-
-

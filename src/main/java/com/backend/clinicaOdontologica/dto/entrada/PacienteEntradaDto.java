@@ -10,10 +10,10 @@ import java.time.LocalDate;
 public class PacienteEntradaDto {
     @NotBlank(message = "Debe especificarse el nombre del paciente")
     @Size(max = 50, message = "El nombre debe tener hasta 50 caracteres")
-    private String nombre;
+    private String nombrePaciente;
     @Size(max = 50, message = "El apellido debe tener hasta 50 caracteres")
     @NotBlank(message = "Debe especificarse el apellido del paciente")
-    private String apellido;
+    private String apellidoPaciente;
     @Positive(message = "El dni del paciente no puede ser nulo o menor a cero")
     private int dni;
 
@@ -29,28 +29,28 @@ public class PacienteEntradaDto {
     public PacienteEntradaDto() {
     }
 
-    public PacienteEntradaDto(String nombre, String apellido, int dni, LocalDate fechaIngreso, DomicilioEntradaDto domicilioEntradaDto) {
-        this.nombre = nombre;
-        this.apellido = apellido;
+    public PacienteEntradaDto(String nombrePaciente, String apellidoPaciente, int dni, LocalDate fechaIngreso, DomicilioEntradaDto domicilioEntradaDto) {
+        this.nombrePaciente = nombrePaciente;
+        this.apellidoPaciente = apellidoPaciente;
         this.dni = dni;
         this.fechaIngreso = fechaIngreso;
         this.domicilioEntradaDto = domicilioEntradaDto;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getNombrePaciente() {
+        return nombrePaciente;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setNombrePaciente(String nombrePaciente) {
+        this.nombrePaciente = nombrePaciente;
     }
 
-    public String getApellido() {
-        return apellido;
+    public String getApellidoPaciente() {
+        return apellidoPaciente;
     }
 
     public void setApellido(String apellido) {
-        this.apellido = apellido;
+        this.apellidoPaciente = apellidoPaciente;
     }
 
     public int getDni() {

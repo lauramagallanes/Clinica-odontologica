@@ -8,53 +8,72 @@ import javax.validation.Valid;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 
 public class TurnoEntradaDto {
-
-    //@NotNull(message = "El paciente no puede ser nulo")
-    @NotNull(message = "Debe especificarse el paciente")
-    @Valid
-    private PacienteEntradaDto pacienteEntradaDto; //podriamos usar un DTO que tenga solo el nombre del paciente
+    //El dato para agendar al paciente será el dni, me parece mas realista que el nombre (ROMI)
+    @Positive(message = "El dni del paciente no puede ser nulo o menor a cero")
+    private int dniPacienteEntradaDto;
 
     //@NotNull(message = "El odontologo no puede ser nulo")
-    @NotNull(message = "Debe especificarse el odontologo")
+    @NotNull(message = "Debe especificarse el apellido del odontologo")
     @Valid
-    private OdontologoEntradaDto odontologoEntradaDto;
+    private String apellidoOdontologoEntradaDto;
+
+    //@NotNull(message = "El odontologo no puede ser nulo")
+    @NotNull(message = "Debe especificarse el nombre del odontologo")
+    @Valid
+    private String nombreOdontologoEntradaDto;
+
     //FutureOrPresent toma en cuenta solo fecha u hora tambien?
     @FutureOrPresent(message = "La fecha no puede ser anterior al día de hoy")
     @NotNull(message = "Debe especificarse la fecha del turno")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime fechaHora;
 
-    //Tienen que ir todos los datos de paciente y odontologo? Hacer nuevo DTO con solo nombres
-    public TurnoEntradaDto(PacienteEntradaDto pacienteEntradaDto, OdontologoEntradaDto odontologoEntradaDto, LocalDateTime fechaHora) {
-        this.pacienteEntradaDto = pacienteEntradaDto;
-        this.odontologoEntradaDto = odontologoEntradaDto;
+    public TurnoEntradaDto(){
+
+    }
+
+    public TurnoEntradaDto(int dniPacienteEntradaDto, String apellidoOdontologoEntradaDto, String nombreOdontologoEntradaDto, LocalDateTime fechaHoraEntradaDto) {
+        this.dniPacienteEntradaDto = dniPacienteEntradaDto;
+        this.apellidoOdontologoEntradaDto = apellidoOdontologoEntradaDto;
+        this.nombreOdontologoEntradaDto = nombreOdontologoEntradaDto;
         this.fechaHora = fechaHora;
     }
 
-    public @NotNull(message = "El paciente no puede ser nulo") @NotBlank(message = "Debe especificarse el paciente") @Valid PacienteEntradaDto getPacienteEntradaDto() {
-        return pacienteEntradaDto;
+    @Positive(message = "El dni del paciente no puede ser nulo o menor a cero")
+    public int getDniPacienteEntradaDto() {
+        return dniPacienteEntradaDto;
     }
 
-    public void setPacienteEntradaDto(@NotNull(message = "El paciente no puede ser nulo") @NotBlank(message = "Debe especificarse el paciente") @Valid PacienteEntradaDto pacienteEntradaDto) {
-        this.pacienteEntradaDto = pacienteEntradaDto;
+    public void setDniPacienteEntradaDto(int dniPacienteEntradaDto) {
+        this.dniPacienteEntradaDto = dniPacienteEntradaDto;
     }
 
-    public @NotNull(message = "El odontologo no puede ser nulo") @NotBlank(message = "Debe especificarse el odontologo") @Valid OdontologoEntradaDto getOdontologoEntradaDto() {
-        return odontologoEntradaDto;
+    public String getApellidoOdontologoEntradaDto() {
+        return apellidoOdontologoEntradaDto;
     }
 
-    public void setOdontologoEntradaDto(@NotNull(message = "El odontologo no puede ser nulo") @NotBlank(message = "Debe especificarse el odontologo") @Valid OdontologoEntradaDto odontologoEntradaDto) {
-        this.odontologoEntradaDto = odontologoEntradaDto;
+    public void setApellidoOdontologoEntradaDto(String apellidoOdontologoEntradaDto) {
+        this.apellidoOdontologoEntradaDto = apellidoOdontologoEntradaDto;
     }
 
-    public @FutureOrPresent(message = "La fecha no puede ser anterior al día de hoy") @NotNull(message = "Debe especificarse la fecha del turno") LocalDateTime getFechaHora() {
+    public String getNombreOdontologoEntradaDto() {
+        return nombreOdontologoEntradaDto;
+    }
+
+    public void setNombreOdontologoEntradaDto(String nombreOdontologoEntradaDto) {
+        this.nombreOdontologoEntradaDto = nombreOdontologoEntradaDto;
+    }
+
+    public LocalDateTime getFechaHora() {
         return fechaHora;
     }
 
-    public void setFechaHora(@FutureOrPresent(message = "La fecha no puede ser anterior al día de hoy") @NotNull(message = "Debe especificarse la fecha del turno") LocalDateTime fechaHora) {
+    public void setFechaHora( LocalDateTime fechaHora) {
         this.fechaHora = fechaHora;
     }
 }
+
