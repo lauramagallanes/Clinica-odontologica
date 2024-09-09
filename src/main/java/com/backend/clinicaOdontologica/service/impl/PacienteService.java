@@ -3,6 +3,7 @@ package com.backend.clinicaOdontologica.service.impl;
 import com.backend.clinicaOdontologica.dto.entrada.PacienteEntradaDto;
 import com.backend.clinicaOdontologica.dto.salida.PacienteSalidaDto;
 import com.backend.clinicaOdontologica.entity.Paciente;
+import com.backend.clinicaOdontologica.exceptions.ResourceNotFoundException;
 import com.backend.clinicaOdontologica.repository.PacienteRepository;
 import com.backend.clinicaOdontologica.service.IPacienteService;
 import com.backend.clinicaOdontologica.utils.JsonPrinter;
@@ -67,13 +68,14 @@ public class PacienteService implements IPacienteService {
     }
 
     @Override
-    public void eliminarPaciente(Long id) {
+    public void eliminarPaciente(Long id) throws ResourceNotFoundException{
         if (buscarPacientePorId(id)!=null){
             //llamada a la capa repositorio para eliminar
             pacienteRepository.deleteById(id);
             LOGGER.warn("Se ha eliminado el paciente con id {}", id);
         } else{
-            //Excepcion
+
+            throw new ResourceNotFoundException("No existe el paciente con id " + id); //El msje de la excepcion es para el cliente, y el logger es para nosotros los dev
         }
     }
 
@@ -91,6 +93,7 @@ public class PacienteService implements IPacienteService {
             pacienteRecibido.getDomicilio().setId(pacienteAActualizar.getDomicilio().getId());
             pacienteAActualizar = pacienteRecibido; //asi me evito hacer los setters para cada atributo
             pacienteRepository.save(pacienteAActualizar);
+            LOGGER.info("PacienteActualizado: {}", JsonPrinter.toString(pacienteAActualizar));
         }else {
             LOGGER.error("No fue posible actualizar el paciente por que no se encuentra en nuestra base de datos");
         }

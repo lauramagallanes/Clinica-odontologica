@@ -18,12 +18,12 @@ function listarOdontologos(){
 }
 
 function renderizarOdontologos(listado){
-    const listadoOdontologos = document.querySelector("#odontologos") /
+    const listadoOdontologos = document.querySelector("#odontologos")
     listadoOdontologos.innerHTML = ""
     let odontologo;
     listado.forEach(function(odontologo){
     console.log(odontologo)
-    odontologo = `<li><p>${odontologo.nombre} ${odontologo.apellido} </p></li>`
+    odontologo = `<li><p>${odontologo.nombreOdontologo} ${odontologo.apellidoOdontologo} </p></li>`
     listadoOdontologos.innerHTML += odontologo;
 })
 }
