@@ -6,6 +6,7 @@ import com.backend.clinicaOdontologica.dto.salida.TurnoSalidaDto;
 import com.backend.clinicaOdontologica.entity.Odontologo;
 import com.backend.clinicaOdontologica.entity.Paciente;
 import com.backend.clinicaOdontologica.entity.Turno;
+import com.backend.clinicaOdontologica.exceptions.ResourceNotFoundException;
 import com.backend.clinicaOdontologica.repository.OdontologoRepository;
 import com.backend.clinicaOdontologica.repository.PacienteRepository;
 import com.backend.clinicaOdontologica.repository.TurnoRepository;
@@ -118,13 +119,14 @@ public class TurnoService implements ITurnoService {
     }
 
     @Override
-    public void eliminarTurno(Long id) {
-        if (buscarTurnoPorId(id) != null) {
+    public void eliminarTurno(Long id) throws ResourceNotFoundException{
+        if (buscarTurnoPorId(id)!=null){
             //llamada a la capa repositorio para eliminar
             turnoRepository.deleteById(id);
             LOGGER.warn("Se ha eliminado el turno con id {}", id);
-        } else {
-            //Excepcion (Me faltan Romi)
+        } else{
+
+            throw new ResourceNotFoundException("No existe el turno con id " + id); //El msje de la excepcion es para el cliente, y el logger es para nosotros los dev
         }
     }
 
