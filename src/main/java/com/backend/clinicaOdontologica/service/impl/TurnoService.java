@@ -130,7 +130,7 @@ public class TurnoService implements ITurnoService {
         }
     }
 
-    @Override
+   /* @Override
     public TurnoSalidaDto actualizarTurno(TurnoEntradaDto turnoEntradaDto, Long id) {
         //busco el turno a actualizar en la base de datos
         Turno turnoAActualizar = turnoRepository.findById(id).orElse(null); //podria usar el metodo de buscar por id que creamos antes ya que tiene los loggs
@@ -141,9 +141,17 @@ public class TurnoService implements ITurnoService {
         if (turnoAActualizar != null) {
             // seteo la id de turnoRecibido usando la id de turnoAActualizar
             turnoRecibido.setId(turnoAActualizar.getId());
+            Paciente paciente = pacienteRepository.findByDni(turnoAActualizar.getPaciente().getDni())
+                    .orElse(null);
+            Odontologo odontologo = odontologoRepository.findByNombreOdontologoAndApellidoOdontologo(
+                            turnoAActualizar.getOdontologo().getNombreOdontologo(),
+                            turnoAActualizar.getOdontologo().getApellidoOdontologo())
+                    .orElse(null);
 //VER SI CORRESPONDE PONER ALGO DE ODONTOLOGO O PACIENTE (ROMI)
-            turnoRecibido.getPaciente().setId(turnoAActualizar.getPaciente().getId());
-            turnoRecibido.getOdontologo().setId(turnoAActualizar.getOdontologo().getId());
+            turnoRecibido.getPaciente().setDni(turnoAActualizar.getPaciente().getDni());
+            turnoRecibido.getOdontologo().setNombreOdontologo(turnoAActualizar.getOdontologo().getNombreOdontologo());
+            turnoRecibido.getOdontologo().setApellidoOdontologo(turnoAActualizar.getOdontologo().getApellidoOdontologo());
+            turnoRecibido.setFechaHora(turnoAActualizar.getFechaHora());
             turnoAActualizar = turnoRecibido; //asi me evisto hacer los setters para cada atributo
             turnoRepository.save(turnoAActualizar);
         } else {
@@ -151,7 +159,49 @@ public class TurnoService implements ITurnoService {
         }
 
         return turnoSalidaDto; //da siemrpe nulo, lo tengo que vichar (romi)
-    }
+    } */
+   @Override
+   public TurnoSalidaDto actualizarTurno(TurnoEntradaDto turnoEntradaDto, Long id) {
+       // Buscar el turno existente por ID
+       Turno turnoAActualizar = turnoRepository.findById(id).orElse(null);
+
+       if (turnoAActualizar == null) {
+           LOGGER.error("No fue posible actualizar el turno porque no se encuentra en nuestra base de datos");
+
+       }
+
+       // Buscar paciente por DNI
+       Optional<Paciente> optionalPaciente = pacienteRepository.findByDni(turnoEntradaDto.getDniPacienteEntradaDto());
+       Paciente paciente = optionalPaciente.orElse(null);
+
+       // Buscar odontólogo por nombre y apellido
+       Optional<Odontologo> optionalOdontologo = odontologoRepository.findByNombreOdontologoAndApellidoOdontologo(
+               turnoEntradaDto.getNombreOdontologoEntradaDto(),
+               turnoEntradaDto.getApellidoOdontologoEntradaDto());
+       Odontologo odontologo = optionalOdontologo.orElse(null);
+
+       if (paciente == null || odontologo == null) {
+           LOGGER.error("No se encontraron el paciente u odontólogo existentes. Paciente: {}, Odontólogo: {}",
+                   paciente != null ? paciente.getDni() : "No encontrado",
+                   odontologo != null ? odontologo.getNombreOdontologo() + " " + odontologo.getApellidoOdontologo() : "No encontrado");
+           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Paciente u odontólogo no encontrados");
+       }
+
+       // Actualizar las propiedades del turno existente
+       turnoAActualizar.setPaciente(paciente);
+       turnoAActualizar.setOdontologo(odontologo);
+       turnoAActualizar.setFechaHora(turnoEntradaDto.getFechaHora());
+
+       // Guardar el turno actualizado
+       Turno turnoActualizado = turnoRepository.save(turnoAActualizar);
+       LOGGER.info("Turno actualizado: {}", JsonPrinter.toString(turnoActualizado));
+
+       // Mapear a DTO de salida
+       TurnoSalidaDto turnoSalidaDto = modelMapper.map(turnoActualizado, TurnoSalidaDto.class);
+       LOGGER.info("TurnoSalidaDto actualizado: {}", JsonPrinter.toString(turnoSalidaDto));
+
+       return turnoSalidaDto;
+   }
 
 
     private void configureMapping() {
