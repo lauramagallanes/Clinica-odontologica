@@ -3,6 +3,7 @@ package com.backend.clinicaOdontologica.controller;
 
 import com.backend.clinicaOdontologica.dto.entrada.TurnoEntradaDto;
 import com.backend.clinicaOdontologica.dto.salida.TurnoSalidaDto;
+import com.backend.clinicaOdontologica.exceptions.ResourceNotFoundException;
 import com.backend.clinicaOdontologica.service.ITurnoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,7 +53,7 @@ import java.util.List;
 
         //DELETE
         @DeleteMapping("/eliminar")//localhost:8080/turnos/eliminar?id=x
-        public ResponseEntity<String> eliminarTurno(@RequestParam Long id){
+        public ResponseEntity<String> eliminarTurno(@RequestParam Long id) throws ResourceNotFoundException {
             turnoService.eliminarTurno(id);
             return new ResponseEntity<>("Turno eliminado correctamente", HttpStatus.NO_CONTENT);
         }
