@@ -29,7 +29,6 @@ import java.util.List;
         //Asi funciona el sistema: Me llega un JSON y el @RequestBody lo transforma en el DTO de entrada. Este va al controller, del controller va al service, del service al mapper y lo transforma en una entidad, la entidad va al repositorio(DAO), del repositorio se consulta a la base de datos, la base de datos devuelve una entidad que va al repositorio, el repositorio ejecuta el service, y la info es mapeada nuevamente, generando el DTO de salida. El DTO de salida va al controller, y el @ResponseBody lo trnsforma en JSON, que es lo que le llega al cliente
 
         //POST
-        @PostMapping("/registrar")
 
         @PostMapping("/registrar")
         public ResponseEntity<?> registrarTurno(@RequestBody @Valid TurnoEntradaDto turnoEntradaDto)throws BadRequestException {
