@@ -92,7 +92,7 @@ public class PacienteService implements IPacienteService {
     }
 
     @Override
-    public PacienteSalidaDto actualizarPaciente(PacienteEntradaDto pacienteEntradaDto, Long id) {
+    public PacienteSalidaDto actualizarPaciente(PacienteEntradaDto pacienteEntradaDto, Long id) throws ResourceNotFoundException {
         //busco al paciente a actualizar en la base de datos
         Paciente pacienteAActualizar = pacienteRepository.findById(id).orElse(null); //podria usar el metodo de buscar por id que creamos antes ya que tiene los loggs
         //mapeo el pacienteEntradaDto que es lo que me llega por parametro para castearlo a una entity (Paciente)
@@ -108,6 +108,7 @@ public class PacienteService implements IPacienteService {
             LOGGER.info("PacienteActualizado: {}", JsonPrinter.toString(pacienteAActualizar));
         }else {
             LOGGER.error("No fue posible actualizar el paciente por que no se encuentra en nuestra base de datos");
+            throw new ResourceNotFoundException("No fue posible actualizar el paciente por que no se encuentra en nuestra base de datos");
         }
         return pacienteSalidaDto;
     }

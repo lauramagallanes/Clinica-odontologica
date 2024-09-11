@@ -54,42 +54,38 @@ public class TurnoService implements ITurnoService {
         // Buscar odontólogo por nombre y apellido
         OdontologoSalidaDto odontologoSalidaDto = odontologoService.buscarOdontologoPorNumeroMatricula(turno.getNumeroMatriculaOdontologo());
 
-        if (pacienteSalidaDto == null) {
-            if (odontologoSalidaDto != null) {
-                LOGGER.error("Paciente con DNI {} no encontrado", turno.getDniPaciente());
-                throw new BadRequestException("El paciente no fue  encontrado");
-            } else {
-                LOGGER.error("ni paciente ni odontólogo fueron encontrados");
-                throw new BadRequestException("Ni odontólogo ni paciente fueron  encontrados");
-            }
+        if (pacienteSalidaDto != null && odontologoSalidaDto != null){
+            // Crear la entidad Turno a partir del TurnoEntradaDto
+            Turno entidadTurno = modelMapper.map(turno, Turno.class);
+
+            // Asignar el paciente y odontólogo encontrados a la entidad Turno
+            Paciente paciente = modelMapper.map(pacienteSalidaDto, Paciente.class);
+            Odontologo odontologo = modelMapper.map(odontologoSalidaDto, Odontologo.class);
+            entidadTurno.setPaciente(paciente);
+            entidadTurno.setOdontologo(odontologo);
+            LOGGER.info("EntidadTurno: {}", JsonPrinter.toString(entidadTurno));
+
+            Turno turnoRegistrado = turnoRepository.save(entidadTurno);
+            LOGGER.info("TurnoRegistrado: {}", JsonPrinter.toString(turnoRegistrado));
+
+
+            // Mapear el turno registrado a DTO de salida
+            TurnoSalidaDto turnoSalidaDto = modelMapper.map(turnoRegistrado, TurnoSalidaDto.class);
+            LOGGER.info("TurnoSalidaDto: {}", JsonPrinter.toString(turnoSalidaDto));
+
+            return turnoSalidaDto;
+
+        } else if (pacienteSalidaDto == null && odontologoSalidaDto == null) {
+            LOGGER.error("Ni paciente ni odontólogo fueron encontrados");
+            throw new BadRequestException("Ni odontólogo ni paciente fueron encontrados");
+        } else if (odontologoSalidaDto == null) {
+            LOGGER.error("Odontólogo con número de matrícula {} no encontrado", turno.getNumeroMatriculaOdontologo());
+            throw new BadRequestException("El odontólogo no fue encontrado");
+        } else if (pacienteSalidaDto == null) {
+            LOGGER.error("Paciente con DNI {} no encontrado", turno.getDniPaciente());
+            throw new BadRequestException("El paciente no fue encontrado");
         }
-
-        if (odontologoSalidaDto == null) {
-            LOGGER.error("Odontólogo con número de matrícula {} no encontrado",
-                    turno.getNumeroMatriculaOdontologo());
-            throw new BadRequestException( "El Odontólogo no fue encontrado");
-        }
-
-
-        // Crear la entidad Turno a partir del TurnoEntradaDto
-        Turno entidadTurno = modelMapper.map(turno, Turno.class);
-
-        // Asignar el paciente y odontólogo encontrados a la entidad Turno
-        Paciente paciente = modelMapper.map(pacienteSalidaDto, Paciente.class);
-        Odontologo odontologo = modelMapper.map(odontologoSalidaDto, Odontologo.class);
-        entidadTurno.setPaciente(paciente);
-        entidadTurno.setOdontologo(odontologo);
-        LOGGER.info("EntidadTurno: {}", JsonPrinter.toString(entidadTurno));
-
-        Turno turnoRegistrado = turnoRepository.save(entidadTurno);
-        LOGGER.info("TurnoRegistrado: {}", JsonPrinter.toString(turnoRegistrado));
-
-
-        // Mapear el turno registrado a DTO de salida
-        TurnoSalidaDto turnoSalidaDto = modelMapper.map(turnoRegistrado, TurnoSalidaDto.class);
-        LOGGER.info("TurnoSalidaDto: {}", JsonPrinter.toString(turnoSalidaDto));
-
-        return turnoSalidaDto;
+        return null;
 
     }
 

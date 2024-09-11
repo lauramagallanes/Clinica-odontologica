@@ -16,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("odontologos")
+@CrossOrigin
 public class OdontologoController {
 
     private IOdontologoService odontologoService;
