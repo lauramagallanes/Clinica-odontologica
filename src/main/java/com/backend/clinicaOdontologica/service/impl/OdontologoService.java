@@ -57,6 +57,19 @@ public class OdontologoService implements IOdontologoService {
     }
 
     @Override
+    public OdontologoSalidaDto buscarOdontologoPorNumeroMatricula(int numeroMatricula) {
+        Odontologo odontologoBuscado = odontologoRepository.findByNumeroMatricula(numeroMatricula).orElse(null);
+        LOGGER.info("Odontologo buscado: {}", JsonPrinter.toString(odontologoBuscado));
+        OdontologoSalidaDto odontologoEncontrado= null;
+        if(odontologoBuscado != null){
+            odontologoEncontrado = modelMapper.map(odontologoBuscado, OdontologoSalidaDto.class);
+            LOGGER.info("Odontologo encontroado: {}", JsonPrinter.toString(odontologoEncontrado));
+        } else LOGGER.error("No se ha encontrado el odontologo con número de matrícula {}", numeroMatricula);
+
+        return odontologoEncontrado;
+    }
+
+    @Override
     public List<OdontologoSalidaDto> listarOdontologos() {
         List<OdontologoSalidaDto> odontologoSalidaDtos = odontologoRepository.findAll()
                 .stream()

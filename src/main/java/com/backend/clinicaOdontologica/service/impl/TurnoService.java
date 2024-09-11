@@ -1,14 +1,14 @@
 package com.backend.clinicaOdontologica.service.impl;
 
 import com.backend.clinicaOdontologica.dto.entrada.TurnoEntradaDto;
+import com.backend.clinicaOdontologica.dto.salida.OdontologoSalidaDto;
+import com.backend.clinicaOdontologica.dto.salida.PacienteSalidaDto;
 import com.backend.clinicaOdontologica.dto.salida.TurnoSalidaDto;
 import com.backend.clinicaOdontologica.entity.Odontologo;
 import com.backend.clinicaOdontologica.entity.Paciente;
 import com.backend.clinicaOdontologica.entity.Turno;
 import com.backend.clinicaOdontologica.exceptions.BadRequestException;
 import com.backend.clinicaOdontologica.exceptions.ResourceNotFoundException;
-import com.backend.clinicaOdontologica.repository.OdontologoRepository;
-import com.backend.clinicaOdontologica.repository.PacienteRepository;
 import com.backend.clinicaOdontologica.repository.TurnoRepository;
 import com.backend.clinicaOdontologica.service.ITurnoService;
 import com.backend.clinicaOdontologica.utils.JsonPrinter;
@@ -27,15 +27,15 @@ public class TurnoService implements ITurnoService {
     //Usamos slf4j como libreria de logging
     private final Logger LOGGER = LoggerFactory.getLogger(TurnoService.class);
     private final TurnoRepository turnoRepository;
-    private final PacienteRepository pacienteRepository;// no debe comunicarse con los repositorios, sino con los service
-    private final OdontologoRepository odontologoRepository;
+    private final PacienteService pacienteService;
+    private final OdontologoService odontologoService;
     private final ModelMapper modelMapper;
 
     //cuando defino algo como final, le debo asignar un valor, para eso creamos el constructor--> inyectamos el model mapper en el servicio a través del constructor:
-    public TurnoService(TurnoRepository turnoRepository, PacienteRepository pacienteRepository, OdontologoRepository odontologoRepository, ModelMapper modelMapper) {
+    public TurnoService(TurnoRepository turnoRepository, PacienteService pacienteService, OdontologoService odontologoService, ModelMapper modelMapper) {
         this.turnoRepository = turnoRepository;
-        this.pacienteRepository = pacienteRepository;
-        this.odontologoRepository = odontologoRepository;
+        this.pacienteService = pacienteService;
+        this.odontologoService = odontologoService;
         this.modelMapper = modelMapper;
         // llamamos al metodo configureMapping que creamos abajo:
         configureMapping();
@@ -48,18 +48,15 @@ public class TurnoService implements ITurnoService {
         LOGGER.info("TurnoEntradaDto: {}", JsonPrinter.toString(turno));
 
         // Buscar paciente por DNI
-        Optional<Paciente> optionalPaciente = pacienteRepository.findByDni(turno.getDniPacienteEntradaDto());
-        Paciente paciente = optionalPaciente.orElse(null);
+        PacienteSalidaDto pacienteSalidaDto = pacienteService.buscarPacientePorDNI(turno.getDniPaciente());
+
 
         // Buscar odontólogo por nombre y apellido
-        Optional<Odontologo> optionalOdontologo = odontologoRepository.findByNombreOdontologoAndApellidoOdontologo(
-                turno.getNombreOdontologoEntradaDto(),
-                turno.getApellidoOdontologoEntradaDto());
-        Odontologo odontologo = optionalOdontologo.orElse(null);
+        OdontologoSalidaDto odontologoSalidaDto = odontologoService.buscarOdontologoPorNumeroMatricula(turno.getNumeroMatriculaOdontologo());
 
-        if (paciente == null) {
-            if (odontologo != null) {
-                LOGGER.error("Paciente con DNI {} no encontrado", turno.getDniPacienteEntradaDto());
+        if (pacienteSalidaDto == null) {
+            if (odontologoSalidaDto != null) {
+                LOGGER.error("Paciente con DNI {} no encontrado", turno.getDniPaciente());
                 throw new BadRequestException("El paciente no fue  encontrado");
             } else {
                 LOGGER.error("ni paciente ni odontólogo fueron encontrados");
@@ -67,17 +64,19 @@ public class TurnoService implements ITurnoService {
             }
         }
 
-        if (odontologo == null) {
-            LOGGER.error("Odontólogo con nombre {} y apellido {} no encontrado",
-                    turno.getNombreOdontologoEntradaDto(),
-                    turno.getApellidoOdontologoEntradaDto());
+        if (odontologoSalidaDto == null) {
+            LOGGER.error("Odontólogo con número de matrícula {} no encontrado",
+                    turno.getNumeroMatriculaOdontologo());
             throw new BadRequestException( "El Odontólogo no fue encontrado");
         }
 
 
         // Crear la entidad Turno a partir del TurnoEntradaDto
         Turno entidadTurno = modelMapper.map(turno, Turno.class);
+
         // Asignar el paciente y odontólogo encontrados a la entidad Turno
+        Paciente paciente = modelMapper.map(pacienteSalidaDto, Paciente.class);
+        Odontologo odontologo = modelMapper.map(odontologoSalidaDto, Odontologo.class);
         entidadTurno.setPaciente(paciente);
         entidadTurno.setOdontologo(odontologo);
         LOGGER.info("EntidadTurno: {}", JsonPrinter.toString(entidadTurno));
@@ -130,36 +129,7 @@ public class TurnoService implements ITurnoService {
         }
     }
 
-   /* @Override
-    public TurnoSalidaDto actualizarTurno(TurnoEntradaDto turnoEntradaDto, Long id) {
-        //busco el turno a actualizar en la base de datos
-        Turno turnoAActualizar = turnoRepository.findById(id).orElse(null); //podria usar el metodo de buscar por id que creamos antes ya que tiene los loggs
-        //mapeo el turnoEntradaDto que es lo que me llega por parametro para castearlo a una entity (Turno)
-        Turno turnoRecibido = modelMapper.map(turnoEntradaDto, Turno.class);
-
-        TurnoSalidaDto turnoSalidaDto = null;
-        if (turnoAActualizar != null) {
-            // seteo la id de turnoRecibido usando la id de turnoAActualizar
-            turnoRecibido.setId(turnoAActualizar.getId());
-            Paciente paciente = pacienteRepository.findByDni(turnoAActualizar.getPaciente().getDni())
-                    .orElse(null);
-            Odontologo odontologo = odontologoRepository.findByNombreOdontologoAndApellidoOdontologo(
-                            turnoAActualizar.getOdontologo().getNombreOdontologo(),
-                            turnoAActualizar.getOdontologo().getApellidoOdontologo())
-                    .orElse(null);
-//VER SI CORRESPONDE PONER ALGO DE ODONTOLOGO O PACIENTE (ROMI)
-            turnoRecibido.getPaciente().setDni(turnoAActualizar.getPaciente().getDni());
-            turnoRecibido.getOdontologo().setNombreOdontologo(turnoAActualizar.getOdontologo().getNombreOdontologo());
-            turnoRecibido.getOdontologo().setApellidoOdontologo(turnoAActualizar.getOdontologo().getApellidoOdontologo());
-            turnoRecibido.setFechaHora(turnoAActualizar.getFechaHora());
-            turnoAActualizar = turnoRecibido; //asi me evisto hacer los setters para cada atributo
-            turnoRepository.save(turnoAActualizar);
-        } else {
-            LOGGER.error("No fue posible actualizar el turno por que no se encuentra en nuestra base de datos");
-        }
-
-        return turnoSalidaDto; //da siemrpe nulo, lo tengo que vichar (romi)
-    } */
+    
    @Override
    public TurnoSalidaDto actualizarTurno(TurnoEntradaDto turnoEntradaDto, Long id) {
        // Buscar el turno existente por ID
@@ -171,21 +141,21 @@ public class TurnoService implements ITurnoService {
        }
 
        // Buscar paciente por DNI
-       Optional<Paciente> optionalPaciente = pacienteRepository.findByDni(turnoEntradaDto.getDniPacienteEntradaDto());
-       Paciente paciente = optionalPaciente.orElse(null);
+       PacienteSalidaDto pacienteSalidaDto = pacienteService.buscarPacientePorDNI(turnoEntradaDto.getDniPaciente());
 
        // Buscar odontólogo por nombre y apellido
-       Optional<Odontologo> optionalOdontologo = odontologoRepository.findByNombreOdontologoAndApellidoOdontologo(
-               turnoEntradaDto.getNombreOdontologoEntradaDto(),
-               turnoEntradaDto.getApellidoOdontologoEntradaDto());
-       Odontologo odontologo = optionalOdontologo.orElse(null);
+       OdontologoSalidaDto odontologoSalidaDto = odontologoService.buscarOdontologoPorNumeroMatricula(turnoEntradaDto.getNumeroMatriculaOdontologo());
 
-       if (paciente == null || odontologo == null) {
+
+       if (pacienteSalidaDto == null || odontologoSalidaDto == null) {
            LOGGER.error("No se encontraron el paciente u odontólogo existentes. Paciente: {}, Odontólogo: {}",
-                   paciente != null ? paciente.getDni() : "No encontrado",
-                   odontologo != null ? odontologo.getNombreOdontologo() + " " + odontologo.getApellidoOdontologo() : "No encontrado");
+                   pacienteSalidaDto != null ? pacienteSalidaDto.getDni() : "No encontrado",
+                   odontologoSalidaDto != null ? odontologoSalidaDto.getNumeroMatricula(): "No encontrado");
            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Paciente u odontólogo no encontrados");
        }
+
+       Paciente paciente = modelMapper.map(pacienteSalidaDto, Paciente.class);
+       Odontologo odontologo = modelMapper.map(odontologoSalidaDto, Odontologo.class);
 
        // Actualizar las propiedades del turno existente
        turnoAActualizar.setPaciente(paciente);

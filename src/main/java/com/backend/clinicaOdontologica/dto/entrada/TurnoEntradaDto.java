@@ -5,26 +5,18 @@ import com.backend.clinicaOdontologica.entity.Paciente;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.validation.Valid;
-import javax.validation.constraints.FutureOrPresent;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
 public class TurnoEntradaDto {
     //El dato para agendar al paciente será el dni, me parece mas realista que el nombre (ROMI)
     @Positive(message = "El dni del paciente no puede ser nulo o menor a cero")
-    private int dniPacienteEntradaDto;
+    private int dniPaciente;
 
     //@NotNull(message = "El odontologo no puede ser nulo")
-    @NotNull(message = "Debe especificarse el apellido del odontologo")
-    @Valid
-    private String apellidoOdontologoEntradaDto;
+    @Positive(message = "El número de matricula del odontólogo no puede ser nulo ni menor a cero")
+    private int numeroMatriculaOdontologo;
 
-    //@NotNull(message = "El odontologo no puede ser nulo")
-    @NotNull(message = "Debe especificarse el nombre del odontologo")
-    @Valid
-    private String nombreOdontologoEntradaDto;
 
     //FutureOrPresent toma en cuenta solo fecha u hora tambien?
     @FutureOrPresent(message = "La fecha no puede ser anterior al día de hoy")
@@ -36,37 +28,29 @@ public class TurnoEntradaDto {
 
     }
 
-    public TurnoEntradaDto(int dniPacienteEntradaDto, String apellidoOdontologoEntradaDto, String nombreOdontologoEntradaDto, LocalDateTime fechaHoraEntradaDto) {
-        this.dniPacienteEntradaDto = dniPacienteEntradaDto;
-        this.apellidoOdontologoEntradaDto = apellidoOdontologoEntradaDto;
-        this.nombreOdontologoEntradaDto = nombreOdontologoEntradaDto;
+    public TurnoEntradaDto(int dniPaciente, int numeroMatriculaOdontologo,  LocalDateTime fechaHora) {
+        this.dniPaciente = dniPaciente;
+        this.numeroMatriculaOdontologo = numeroMatriculaOdontologo;
         this.fechaHora = fechaHora;
     }
 
     @Positive(message = "El dni del paciente no puede ser nulo o menor a cero")
-    public int getDniPacienteEntradaDto() {
-        return dniPacienteEntradaDto;
+    public int getDniPaciente() {
+        return dniPaciente;
     }
 
-    public void setDniPacienteEntradaDto(int dniPacienteEntradaDto) {
-        this.dniPacienteEntradaDto = dniPacienteEntradaDto;
+    public void setDniPacienteEntradaDto(int dniPaciente) {
+        this.dniPaciente = dniPaciente;
     }
 
-    public String getApellidoOdontologoEntradaDto() {
-        return apellidoOdontologoEntradaDto;
+    public int getNumeroMatriculaOdontologo() {
+        return numeroMatriculaOdontologo;
     }
 
-    public void setApellidoOdontologoEntradaDto(String apellidoOdontologoEntradaDto) {
-        this.apellidoOdontologoEntradaDto = apellidoOdontologoEntradaDto;
+    public void setNumeroMatriculaOdontologo(int numeroMatriculaOdontologo) {
+        this.numeroMatriculaOdontologo = numeroMatriculaOdontologo;
     }
 
-    public String getNombreOdontologoEntradaDto() {
-        return nombreOdontologoEntradaDto;
-    }
-
-    public void setNombreOdontologoEntradaDto(String nombreOdontologoEntradaDto) {
-        this.nombreOdontologoEntradaDto = nombreOdontologoEntradaDto;
-    }
 
     public LocalDateTime getFechaHora() {
         return fechaHora;
