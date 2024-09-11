@@ -1,11 +1,11 @@
 package com.backend.clinicaOdontologica.service.impl;
 
 import com.backend.clinicaOdontologica.dto.entrada.TurnoEntradaDto;
-import com.backend.clinicaOdontologica.dto.salida.PacienteSalidaDto;
 import com.backend.clinicaOdontologica.dto.salida.TurnoSalidaDto;
 import com.backend.clinicaOdontologica.entity.Odontologo;
 import com.backend.clinicaOdontologica.entity.Paciente;
 import com.backend.clinicaOdontologica.entity.Turno;
+import com.backend.clinicaOdontologica.exceptions.BadRequestException;
 import com.backend.clinicaOdontologica.exceptions.ResourceNotFoundException;
 import com.backend.clinicaOdontologica.repository.OdontologoRepository;
 import com.backend.clinicaOdontologica.repository.PacienteRepository;
@@ -44,7 +44,7 @@ public class TurnoService implements ITurnoService {
 
 
     @Override
-    public TurnoSalidaDto registrarTurno(TurnoEntradaDto turno) {
+    public TurnoSalidaDto registrarTurno(TurnoEntradaDto turno) throws BadRequestException {
         LOGGER.info("TurnoEntradaDto: {}", JsonPrinter.toString(turno));
 
         // Buscar paciente por DNI
@@ -60,10 +60,10 @@ public class TurnoService implements ITurnoService {
         if (paciente == null) {
             if (odontologo != null) {
                 LOGGER.error("Paciente con DNI {} no encontrado", turno.getDniPacienteEntradaDto());
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Paciente no encontrado");
+                throw new BadRequestException("El paciente no fue  encontrado");
             } else {
                 LOGGER.error("ni paciente ni odontólogo fueron encontrados");
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ni odontólogo ni paciente fueron  encontrados");
+                throw new BadRequestException("Ni odontólogo ni paciente fueron  encontrados");
             }
         }
 
@@ -71,7 +71,7 @@ public class TurnoService implements ITurnoService {
             LOGGER.error("Odontólogo con nombre {} y apellido {} no encontrado",
                     turno.getNombreOdontologoEntradaDto(),
                     turno.getApellidoOdontologoEntradaDto());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Odontólogo no encontrado");
+            throw new BadRequestException( "El Odontólogo no fue encontrado");
         }
 
 
