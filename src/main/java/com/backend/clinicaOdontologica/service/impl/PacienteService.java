@@ -58,6 +58,18 @@ public class PacienteService implements IPacienteService {
     }
 
     @Override
+    public PacienteSalidaDto buscarPacientePorDNI(int dni) {
+        Paciente pacienteBuscado = pacienteRepository.findByDni(dni).orElse(null);
+        LOGGER.info("Paciente buscado: {}", JsonPrinter.toString(pacienteBuscado));
+        PacienteSalidaDto pacienteEncontrado = null;
+        if (pacienteBuscado !=null){
+            pacienteEncontrado= modelMapper.map(pacienteBuscado, PacienteSalidaDto.class);
+            LOGGER.info("Paciente encontrado: {}", JsonPrinter.toString(pacienteEncontrado));
+        } else LOGGER.error("No se ha encontrado el paciente con dni {}", dni);
+        return pacienteEncontrado;
+    }
+
+    @Override
     public List<PacienteSalidaDto> listarPacientes() {
         List<PacienteSalidaDto> pacienteSalidaDtos = pacienteRepository.findAll()
                 .stream()

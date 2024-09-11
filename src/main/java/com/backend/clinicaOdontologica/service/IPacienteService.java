@@ -11,6 +11,7 @@ public interface IPacienteService {
 
     PacienteSalidaDto registrarPaciente(PacienteEntradaDto paciente);
     PacienteSalidaDto buscarPacientePorId(Long id);
+    PacienteSalidaDto buscarPacientePorDNI(int dni);
 
     List<PacienteSalidaDto> listarPacientes();
 

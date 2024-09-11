@@ -11,6 +11,7 @@ import java.util.List;
 public interface IOdontologoService {
     OdontologoSalidaDto registrarOdontologo(OdontologoEntradaDto odontologo);
     OdontologoSalidaDto buscarOdontologoPorId(Long id);
+    OdontologoSalidaDto buscarOdontologoPorNumeroMatricula(int numeroMatricula);
     List<OdontologoSalidaDto> listarOdontologos();
     void eliminarOdontologo(Long id) throws ResourceNotFoundException;
     OdontologoSalidaDto actualizarOdontologo(OdontologoEntradaDto odontologoEntradaDto, Long id);
