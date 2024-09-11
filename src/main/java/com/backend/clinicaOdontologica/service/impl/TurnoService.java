@@ -27,7 +27,7 @@ public class TurnoService implements ITurnoService {
     //Usamos slf4j como libreria de logging
     private final Logger LOGGER = LoggerFactory.getLogger(TurnoService.class);
     private final TurnoRepository turnoRepository;
-    private final PacienteRepository pacienteRepository;
+    private final PacienteRepository pacienteRepository;// no debe comunicarse con los repositorios, sino con los service
     private final OdontologoRepository odontologoRepository;
     private final ModelMapper modelMapper;
 
