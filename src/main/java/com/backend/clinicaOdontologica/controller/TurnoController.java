@@ -30,6 +30,8 @@ import java.util.List;
 
         //POST
         @PostMapping("/registrar")
+
+        @PostMapping("/registrar")
         public ResponseEntity<?> registrarTurno(@RequestBody @Valid TurnoEntradaDto turnoEntradaDto)throws BadRequestException {
 
             try{
