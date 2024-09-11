@@ -29,9 +29,14 @@ import java.util.List;
 
         //POST
         @PostMapping("/registrar")
-        public ResponseEntity<TurnoSalidaDto> registrarTurno(@RequestBody @Valid TurnoEntradaDto turnoEntradaDto)throws BadRequestException {
-            TurnoSalidaDto turnoSalidaDto = turnoService.registrarTurno(turnoEntradaDto);
-            return new ResponseEntity<>(turnoSalidaDto, HttpStatus.CREATED);
+        public ResponseEntity<?> registrarTurno (@RequestBody @Valid TurnoEntradaDto turnoEntradaDto){
+            try {
+                TurnoSalidaDto turnoSalidaDto = turnoService.registrarTurno(turnoEntradaDto);
+                return new ResponseEntity<>(turnoSalidaDto, HttpStatus.CREATED);
+            } catch (BadRequestException ex) {
+                // Devuelve un mensaje de error con el estado HTTP 400
+                return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+            }
         }
 
         //GET
