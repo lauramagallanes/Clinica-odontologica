@@ -3,6 +3,7 @@ package com.backend.clinicaOdontologica.service.impl;
 import com.backend.clinicaOdontologica.dto.entrada.PacienteEntradaDto;
 import com.backend.clinicaOdontologica.dto.salida.PacienteSalidaDto;
 import com.backend.clinicaOdontologica.entity.Paciente;
+import com.backend.clinicaOdontologica.exceptions.BadRequestException;
 import com.backend.clinicaOdontologica.exceptions.ResourceNotFoundException;
 import com.backend.clinicaOdontologica.repository.PacienteRepository;
 import com.backend.clinicaOdontologica.service.IPacienteService;
@@ -10,6 +11,7 @@ import com.backend.clinicaOdontologica.utils.JsonPrinter;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -82,9 +84,16 @@ public class PacienteService implements IPacienteService {
     @Override
     public void eliminarPaciente(Long id) throws ResourceNotFoundException{
         if (buscarPacientePorId(id)!=null){
-            //llamada a la capa repositorio para eliminar
-            pacienteRepository.deleteById(id);
-            LOGGER.warn("Se ha eliminado el paciente con id {}", id);
+            try{
+                //llamada a la capa repositorio para eliminar
+                pacienteRepository.deleteById(id);
+                LOGGER.warn("Se ha eliminado el paciente con id {}", id);
+            } catch (DataIntegrityViolationException exception) {
+                LOGGER.error("No se puede eliminar el paciente con id {} porque está asociado a un turno", id);
+                throw new BadRequestException("No se puede eliminar el paciente porque está asociado a un turno.");
+            }
+
+
         } else{
 
             throw new ResourceNotFoundException("No existe el paciente con id " + id); //El msje de la excepcion es para el cliente, y el logger es para nosotros los dev

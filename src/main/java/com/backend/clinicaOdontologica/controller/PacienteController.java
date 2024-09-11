@@ -2,6 +2,7 @@ package com.backend.clinicaOdontologica.controller;
 
 import com.backend.clinicaOdontologica.dto.entrada.PacienteEntradaDto;
 import com.backend.clinicaOdontologica.dto.salida.PacienteSalidaDto;
+import com.backend.clinicaOdontologica.exceptions.BadRequestException;
 import com.backend.clinicaOdontologica.exceptions.ResourceNotFoundException;
 import com.backend.clinicaOdontologica.service.IPacienteService;
 import org.springframework.http.HttpStatus;
@@ -53,9 +54,15 @@ public class PacienteController {
     //DELETE
     @DeleteMapping("/eliminar")//localhost:8080/pacientes/eliminar?id=x
     public ResponseEntity<String> eliminarPaciente(@RequestParam Long id) throws ResourceNotFoundException {
-        pacienteService.eliminarPaciente(id);
-        return  ResponseEntity
-                .status(HttpStatus.ACCEPTED)
-                .body("Paciente eliminado correctamente");
+
+        try{
+            pacienteService.eliminarPaciente(id);
+            return  ResponseEntity
+                    .status(HttpStatus.ACCEPTED)
+                    .body("Paciente eliminado correctamente");
+        } catch (BadRequestException exception){
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
     }
 }
