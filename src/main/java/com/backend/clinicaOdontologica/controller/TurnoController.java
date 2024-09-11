@@ -15,6 +15,7 @@ import java.util.List;
 
     @RestController
     @RequestMapping("turnos")
+    @CrossOrigin //Para evitar problemas con el CORS al levantar el front
 
     public class TurnoController {
 
@@ -29,14 +30,17 @@ import java.util.List;
 
         //POST
         @PostMapping("/registrar")
-        public ResponseEntity<?> registrarTurno (@RequestBody @Valid TurnoEntradaDto turnoEntradaDto){
-            try {
+
+        @PostMapping("/registrar")
+        public ResponseEntity<?> registrarTurno(@RequestBody @Valid TurnoEntradaDto turnoEntradaDto)throws BadRequestException {
+
+            try{
                 TurnoSalidaDto turnoSalidaDto = turnoService.registrarTurno(turnoEntradaDto);
                 return new ResponseEntity<>(turnoSalidaDto, HttpStatus.CREATED);
-            } catch (BadRequestException ex) {
-                // Devuelve un mensaje de error con el estado HTTP 400
-                return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+            } catch (BadRequestException exception){
+                return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
             }
+
         }
 
         //GET
