@@ -114,7 +114,8 @@ public class PacienteService implements IPacienteService {
             pacienteRecibido.getDomicilio().setId(pacienteAActualizar.getDomicilio().getId());
             pacienteAActualizar = pacienteRecibido; //asi me evito hacer los setters para cada atributo
             pacienteRepository.save(pacienteAActualizar);
-            LOGGER.info("PacienteActualizado: {}", JsonPrinter.toString(pacienteAActualizar));
+            pacienteSalidaDto = modelMapper.map(pacienteAActualizar, PacienteSalidaDto.class);
+            LOGGER.warn("PacienteActualizado: {}", JsonPrinter.toString(pacienteAActualizar));
         }else {
             LOGGER.error("No fue posible actualizar el paciente por que no se encuentra en nuestra base de datos");
             throw new ResourceNotFoundException("No fue posible actualizar el paciente por que no se encuentra en nuestra base de datos");

@@ -128,7 +128,7 @@ public class TurnoService implements ITurnoService {
 
     
    @Override
-   public TurnoSalidaDto actualizarTurno(TurnoEntradaDto turnoEntradaDto, Long id) {
+   public TurnoSalidaDto actualizarTurno(TurnoEntradaDto turnoEntradaDto, Long id) throws BadRequestException {
        // Buscar el turno existente por ID
        Turno turnoAActualizar = turnoRepository.findById(id).orElse(null);
 
@@ -148,7 +148,8 @@ public class TurnoService implements ITurnoService {
            LOGGER.error("No se encontraron el paciente u odontólogo existentes. Paciente: {}, Odontólogo: {}",
                    pacienteSalidaDto != null ? pacienteSalidaDto.getDni() : "No encontrado",
                    odontologoSalidaDto != null ? odontologoSalidaDto.getNumeroMatricula(): "No encontrado");
-           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Paciente u odontólogo no encontrados");
+           //throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Paciente u odontólogo no encontrados");
+           throw new BadRequestException("Paciente u odontólogo no encontrados");
        }
 
        Paciente paciente = modelMapper.map(pacienteSalidaDto, Paciente.class);

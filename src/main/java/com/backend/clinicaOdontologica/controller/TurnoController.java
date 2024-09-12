@@ -51,8 +51,15 @@ import java.util.List;
         //PUT -- actualización completa del objeto
 
         @PutMapping("/actualizar/{id}")
-        public ResponseEntity<TurnoSalidaDto> actualizarTurno(@RequestBody @Valid TurnoEntradaDto turno, @PathVariable Long id){
-            return new ResponseEntity<>(turnoService.actualizarTurno(turno, id), HttpStatus.OK);
+        public ResponseEntity<?> actualizarTurno(@RequestBody @Valid TurnoEntradaDto turno, @PathVariable Long id) throws BadRequestException{
+
+            try {
+                return new ResponseEntity<>(turnoService.actualizarTurno(turno, id), HttpStatus.OK);
+            } catch(BadRequestException exception){
+                return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+            }
+
+
         }
 
         //DELETE
