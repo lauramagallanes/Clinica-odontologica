@@ -32,15 +32,10 @@ import java.util.List;
 
         @PostMapping("/registrar")
         public ResponseEntity<?> registrarTurno(@RequestBody @Valid TurnoEntradaDto turnoEntradaDto)throws BadRequestException {
-
-            try{
                 TurnoSalidaDto turnoSalidaDto = turnoService.registrarTurno(turnoEntradaDto);
                 return new ResponseEntity<>(turnoSalidaDto, HttpStatus.CREATED);
-            } catch (BadRequestException exception){
-                return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
             }
 
-        }
 
         //GET
         @GetMapping("/listar")

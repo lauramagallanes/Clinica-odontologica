@@ -56,13 +56,9 @@ public class OdontologoController {
 
     //DELETE
     @DeleteMapping("/eliminar")//localhost:8080/pacientes/eliminar?id=x
-    public ResponseEntity<String> eliminarOdontologo(@RequestParam Long id) throws ResourceNotFoundException {
-        try{
+    public ResponseEntity<String> eliminarOdontologo(@RequestParam Long id) throws ResourceNotFoundException, BadRequestException {
             odontologoService.eliminarOdontologo(id);
             return new ResponseEntity<>("Odontólogo eliminado correctamente", HttpStatus.NO_CONTENT); //funciona el endpoint pero no me esta mostrando este mensaje en consola
-        } catch(BadRequestException exception) {
-            return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
-        }
 
     }
 }
