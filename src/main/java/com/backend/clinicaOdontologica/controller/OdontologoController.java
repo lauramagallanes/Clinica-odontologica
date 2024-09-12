@@ -50,7 +50,7 @@ public class OdontologoController {
     //PUT -- actualización completa del objeto
 
     @PutMapping("/actualizar/{id}")
-    public ResponseEntity<OdontologoSalidaDto> actualizarOdontologo(@RequestBody @Valid OdontologoEntradaDto odontologo, @PathVariable Long id){
+    public ResponseEntity<OdontologoSalidaDto> actualizarOdontologo(@RequestBody @Valid OdontologoEntradaDto odontologo, @PathVariable Long id) throws ResourceNotFoundException {
         return new ResponseEntity<>(odontologoService.actualizarOdontologo(odontologo, id), HttpStatus.OK);
     } //COMO LO PRUEBO EN POSTMAN?
 

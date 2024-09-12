@@ -100,6 +100,48 @@ class PacienteServiceTest {
 
 
     }
+    @Test
+    void deberiaBuscarPacientePorIdExistente() {
+        when(pacienteRepositoryMock.findById(1L)).thenReturn(Optional.of(paciente));
+
+        PacienteSalidaDto pacienteSalidaDto = pacienteService.buscarPacientePorId(1L);
+
+        assertNotNull(pacienteSalidaDto);
+        assertEquals("Paez", pacienteSalidaDto.getApellidoPaciente());
+        verify(pacienteRepositoryMock, times(1)).findById(1L);
+    }
+    @Test
+    void deberiaDevolverNullCuandoPacientePorIdNoExistente() {
+        when(pacienteRepositoryMock.findById(2L)).thenReturn(Optional.empty());
+
+        PacienteSalidaDto pacienteSalidaDto = pacienteService.buscarPacientePorId(2L);
+
+        assertNull(pacienteSalidaDto);
+        verify(pacienteRepositoryMock, times(1)).findById(2L);
+    }
+    @Test
+    void deberiaBuscarPacientePorDNIExistente() {
+        when(pacienteRepositoryMock.findByDni(4563789)).thenReturn(Optional.of(paciente));
+
+        PacienteSalidaDto pacienteSalidaDto = pacienteService.buscarPacientePorDNI(4563789);
+
+        assertNotNull(pacienteSalidaDto);
+        assertEquals("Paez", pacienteSalidaDto.getApellidoPaciente());
+        verify(pacienteRepositoryMock, times(1)).findByDni(4563789);
+    }
+    @Test
+    void deberiaActualizarPacienteExistente() throws ResourceNotFoundException {
+        when(pacienteRepositoryMock.findById(1L)).thenReturn(Optional.of(paciente));
+        when(pacienteRepositoryMock.save(any(Paciente.class))).thenReturn(paciente);
+
+        pacienteEntradaDto.setNombrePaciente("Maria");
+        PacienteSalidaDto pacienteSalidaDto = pacienteService.actualizarPaciente(pacienteEntradaDto, 1L);
+
+        assertNotNull(pacienteSalidaDto);
+        assertEquals("Maria", pacienteSalidaDto.getNombrePaciente());
+        verify(pacienteRepositoryMock, times(1)).findById(1L);
+        verify(pacienteRepositoryMock, times(1)).save(any(Paciente.class));
+    }
 
   
 }
