@@ -53,16 +53,8 @@ public class PacienteController {
 
     //DELETE
     @DeleteMapping("/eliminar")//localhost:8080/pacientes/eliminar?id=x
-    public ResponseEntity<String> eliminarPaciente(@RequestParam Long id) throws ResourceNotFoundException {
-
-        try{
+    public ResponseEntity<String> eliminarPaciente(@RequestParam Long id) throws ResourceNotFoundException, BadRequestException {
             pacienteService.eliminarPaciente(id);
-            return  ResponseEntity
-                    .status(HttpStatus.ACCEPTED)
-                    .body("Paciente eliminado correctamente");
-        } catch (BadRequestException exception){
-            return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+           return ResponseEntity.status(HttpStatus.ACCEPTED).body("Paciente eliminado correctamente");}
 
-    }
 }

@@ -2,6 +2,7 @@ package com.backend.clinicaOdontologica.service;
 
 import com.backend.clinicaOdontologica.dto.entrada.PacienteEntradaDto;
 import com.backend.clinicaOdontologica.dto.salida.PacienteSalidaDto;
+import com.backend.clinicaOdontologica.exceptions.BadRequestException;
 import com.backend.clinicaOdontologica.exceptions.ResourceNotFoundException;
 
 
@@ -15,6 +16,6 @@ public interface IPacienteService {
 
     List<PacienteSalidaDto> listarPacientes();
 
-    void eliminarPaciente(Long id) throws ResourceNotFoundException;
+    void eliminarPaciente(Long id) throws ResourceNotFoundException, BadRequestException;
     PacienteSalidaDto actualizarPaciente(PacienteEntradaDto pacienteEntradaDto, Long id) throws ResourceNotFoundException;
 }
