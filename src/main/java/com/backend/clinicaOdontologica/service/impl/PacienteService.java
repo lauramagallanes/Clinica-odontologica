@@ -82,7 +82,7 @@ public class PacienteService implements IPacienteService {
     }
 
     @Override
-    public void eliminarPaciente(Long id) throws ResourceNotFoundException{
+    public void eliminarPaciente(Long id) throws ResourceNotFoundException, BadRequestException{
         if (buscarPacientePorId(id)!=null){
             try{
                 //llamada a la capa repositorio para eliminar

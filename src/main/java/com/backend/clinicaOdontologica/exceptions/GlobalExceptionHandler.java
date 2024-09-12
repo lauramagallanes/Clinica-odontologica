@@ -1,6 +1,7 @@
 package com.backend.clinicaOdontologica.exceptions;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,6 +21,14 @@ public class GlobalExceptionHandler {
         mensaje.put("mensaje", "Recurso no encontrado: " + resourceNotFoundException.getMessage());
         //el mensaje de la exepcion va a ser el que setee cuando instancio la excepcion en el service correspondiente
         return mensaje;
+    }
+
+    @ExceptionHandler({BadRequestException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity <Map<String, String>> manejarBadRequestException(BadRequestException badRequestException) {
+        Map<String, String> mensaje = new HashMap<>();
+        mensaje.put("mensaje", badRequestException.getMessage());
+        return new ResponseEntity<>(mensaje ,HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})

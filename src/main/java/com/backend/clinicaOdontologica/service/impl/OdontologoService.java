@@ -82,7 +82,7 @@ public class OdontologoService implements IOdontologoService {
     }
 
     @Override
-    public void eliminarOdontologo(Long id) throws ResourceNotFoundException{
+    public void eliminarOdontologo(Long id) throws ResourceNotFoundException, BadRequestException{
         if(buscarOdontologoPorId(id) != null){
             try {
                 odontologoRepository.deleteById(id);
