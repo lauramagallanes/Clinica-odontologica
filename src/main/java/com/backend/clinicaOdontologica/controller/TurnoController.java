@@ -58,6 +58,6 @@ import java.util.List;
         @DeleteMapping("/eliminar")
         public ResponseEntity<String> eliminarTurno(@RequestParam Long id) throws ResourceNotFoundException {
             turnoService.eliminarTurno(id);
-            return new ResponseEntity<>("Turno eliminado correctamente", HttpStatus.NO_CONTENT);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Turno eliminado correctamente");
         }
     }
