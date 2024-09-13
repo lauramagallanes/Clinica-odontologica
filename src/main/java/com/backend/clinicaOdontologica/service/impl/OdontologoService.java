@@ -1,11 +1,7 @@
 package com.backend.clinicaOdontologica.service.impl;
-
 import com.backend.clinicaOdontologica.dto.entrada.OdontologoEntradaDto;
-import com.backend.clinicaOdontologica.dto.entrada.PacienteEntradaDto;
 import com.backend.clinicaOdontologica.dto.salida.OdontologoSalidaDto;
-import com.backend.clinicaOdontologica.dto.salida.PacienteSalidaDto;
 import com.backend.clinicaOdontologica.entity.Odontologo;
-import com.backend.clinicaOdontologica.entity.Paciente;
 import com.backend.clinicaOdontologica.exceptions.BadRequestException;
 import com.backend.clinicaOdontologica.exceptions.ResourceNotFoundException;
 import com.backend.clinicaOdontologica.repository.OdontologoRepository;
@@ -34,7 +30,6 @@ public class OdontologoService implements IOdontologoService {
     @Override
     public OdontologoSalidaDto registrarOdontologo(OdontologoEntradaDto odontologo) {
         LOGGER.info("OdontologoEntradaDto: {}", JsonPrinter.toString(odontologo));
-        // voy a transformar el Dto OdontologoEntradaDto que recibo en un objeto Odontologo a través del mapper:
         Odontologo entidadOdontologo = modelMapper.map(odontologo, Odontologo.class);
         LOGGER.info("EntidadOdontologo: {}", JsonPrinter.toString(entidadOdontologo));
         Odontologo odontologoRegistrado = odontologoRepository.save(entidadOdontologo);

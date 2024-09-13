@@ -19,15 +19,14 @@ import java.util.List;
 @Service
 public class PacienteService implements IPacienteService {
 
-    //Usamos slf4j como libreria de logging
+
     private final Logger LOGGER = LoggerFactory.getLogger(PacienteService.class);
     private final PacienteRepository pacienteRepository;
     private final ModelMapper modelMapper;
-    //cuando defino algo como final, le debo asignar un valor, para eso creamos el constructor--> inyectamos el model mapper en el servicio a través del constructor:
+
     public PacienteService(PacienteRepository pacienteRepository,  ModelMapper modelMapper) {
         this.pacienteRepository = pacienteRepository;
         this.modelMapper = modelMapper;
-        // llamamos al metodo configureMapping que creamos abajo:
         configureMapping();
 
     }
@@ -36,7 +35,6 @@ public class PacienteService implements IPacienteService {
     @Override
     public PacienteSalidaDto registrarPaciente(PacienteEntradaDto paciente) {
         LOGGER.info("PacienteEntradaDto: {}", JsonPrinter.toString(paciente));
-        // voy a transformar el Dto PacienteEntradaDto que recibo en un objeto Paciente a través del mapper:
         Paciente entidadPaciente = modelMapper.map(paciente, Paciente.class);
         LOGGER.info("EntidadPaciente: {}", JsonPrinter.toString(entidadPaciente));
         Paciente pacienteRegistrado = pacienteRepository.save(entidadPaciente);
@@ -85,7 +83,6 @@ public class PacienteService implements IPacienteService {
     public void eliminarPaciente(Long id) throws ResourceNotFoundException, BadRequestException{
         if (buscarPacientePorId(id)!=null){
             try{
-                //llamada a la capa repositorio para eliminar
                 pacienteRepository.deleteById(id);
                 LOGGER.warn("Se ha eliminado el paciente con id {}", id);
             } catch (DataIntegrityViolationException exception) {
@@ -102,17 +99,17 @@ public class PacienteService implements IPacienteService {
 
     @Override
     public PacienteSalidaDto actualizarPaciente(PacienteEntradaDto pacienteEntradaDto, Long id) throws ResourceNotFoundException {
-        //busco al paciente a actualizar en la base de datos
-        Paciente pacienteAActualizar = pacienteRepository.findById(id).orElse(null); //podria usar el metodo de buscar por id que creamos antes ya que tiene los loggs
-        //mapeo el pacienteEntradaDto que es lo que me llega por parametro para castearlo a una entity (Paciente)
+
+        Paciente pacienteAActualizar = pacienteRepository.findById(id).orElse(null);
+
         Paciente pacienteRecibido = modelMapper.map(pacienteEntradaDto, Paciente.class);
 
         PacienteSalidaDto pacienteSalidaDto = null;
         if (pacienteAActualizar != null){
-            // seteo la id de pacienteRecibido usando la id de pacienteAActualizar
+
             pacienteRecibido.setId(pacienteAActualizar.getId());
             pacienteRecibido.getDomicilio().setId(pacienteAActualizar.getDomicilio().getId());
-            pacienteAActualizar = pacienteRecibido; //asi me evito hacer los setters para cada atributo
+            pacienteAActualizar = pacienteRecibido;
             pacienteRepository.save(pacienteAActualizar);
             pacienteSalidaDto = modelMapper.map(pacienteAActualizar, PacienteSalidaDto.class);
             LOGGER.warn("PacienteActualizado: {}", JsonPrinter.toString(pacienteAActualizar));
@@ -124,9 +121,8 @@ public class PacienteService implements IPacienteService {
     }
 
     private void configureMapping(){
-        // Le indico que cuando le llega algo del tipo PacienteEntradaDto en este servicio, tinee que transformarlo en un objeto del tipo Paciente:
+
         modelMapper.typeMap(PacienteEntradaDto.class, Paciente.class)
-                //invoco un metodo a traves de una clase con :: (referencia al metodo de una clase)
                 .addMappings(mapper -> mapper.map(PacienteEntradaDto::getDomicilioEntradaDto, Paciente::setDomicilio));
         modelMapper.typeMap(Paciente.class, PacienteSalidaDto.class)
                 .addMappings(mapper -> mapper.map(Paciente::getDomicilio, PacienteSalidaDto::setDomicilioSalidaDto));

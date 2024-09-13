@@ -26,18 +26,15 @@ import static org.mockito.Mockito.*;
 @TestPropertySource(locations = "classpath:application-test.properties")
 class PacienteServiceTest {
 
-    //creo el mock de PacienteRepository
-    private final PacienteRepository pacienteRepositoryMock = mock(PacienteRepository.class); // nos permite referenciar a los metodos del repository pero sin invocarlos realmente
 
+    private final PacienteRepository pacienteRepositoryMock = mock(PacienteRepository.class);
     private final ModelMapper modelMapper = new ModelMapper();
-
     private final PacienteService pacienteService = new PacienteService(pacienteRepositoryMock, modelMapper);
 
-    //Declaro las variables que voy a usar en diferentes metodos, y luego las inicialiso dentro de setUp dentro de BeforeEach
     private static PacienteEntradaDto pacienteEntradaDto;
     private static Paciente paciente;
     @BeforeAll
-    //Before requiere que el metodo asociado sea estático, a diferencia de BeforeEach
+
     static void setUp(){
 
         paciente = new Paciente(1L, "Jose", "Paez", 4563789, LocalDate.of(2024, 8, 5), new Domicilio(1L, "Av. Brasil", 3576, "Pocitos", "Montevideo"));
@@ -49,8 +46,6 @@ class PacienteServiceTest {
     @Test
     void deberiaMandarAlRepositorioUnPacienteDeApellidoPaez_yRetornarUnSalidaDtoConSuId(){
         when(pacienteRepositoryMock.save(any(Paciente.class))).thenReturn(paciente);
-        //con el any(Paciente.class) le estoy indicando a mockito que cuanto reciba algo del tipo paciente, retorne el objeto paciente. Lo que recibe en el save no es la entidad paciente tal cual la tenemos instanciada, ya que lo que recibe es una entidad similar, pero sin el id
-
         PacienteSalidaDto pacienteSalidaDto = pacienteService.registrarPaciente((pacienteEntradaDto));
 
         assertNotNull(pacienteSalidaDto);
@@ -111,7 +106,7 @@ class PacienteServiceTest {
         verify(pacienteRepositoryMock, times(1)).findById(1L);
     }
     @Test
-    void deberiaDevolverNullCuandoPacientePorIdNoExistente() {
+    void deberiaDevolverNullCuandoBuscaPacientePorIdNoExistente() {
         when(pacienteRepositoryMock.findById(2L)).thenReturn(Optional.empty());
 
         PacienteSalidaDto pacienteSalidaDto = pacienteService.buscarPacientePorId(2L);
