@@ -2,9 +2,7 @@ package com.backend.clinicaOdontologica.controller;
 
 
 import com.backend.clinicaOdontologica.dto.entrada.OdontologoEntradaDto;
-import com.backend.clinicaOdontologica.dto.entrada.PacienteEntradaDto;
 import com.backend.clinicaOdontologica.dto.salida.OdontologoSalidaDto;
-import com.backend.clinicaOdontologica.dto.salida.PacienteSalidaDto;
 import com.backend.clinicaOdontologica.exceptions.BadRequestException;
 import com.backend.clinicaOdontologica.exceptions.ResourceNotFoundException;
 import com.backend.clinicaOdontologica.service.IOdontologoService;
@@ -22,21 +20,18 @@ public class OdontologoController {
 
     private IOdontologoService odontologoService;
 
-    // Hacemos inyección de dependencia con el constructor, pasando odontologo Service como parametro:
     public OdontologoController(IOdontologoService odontologoService) {
         this.odontologoService = odontologoService;
     }
 
-    //Asi funciona el sistema: Me llega un JSON y el @RequestBody lo transforma en el DTO de entrada. Este va al controller, del controller va al service, del service al mapper y lo transforma en una entidad, la entidad va al repositorio(DAO), del repositorio se consulta a la base de datos, la base de datos devuelve una entidad que va al repositorio, el repositorio ejecuta el service, y la info es mapeada nuevamente, generando el DTO de salida. El DTO de salida va al controller, y el @ResponseBody lo trnsforma en JSON, que es lo que le llega al cliente
 
-    //POST
     @PostMapping("/registrar")
     public ResponseEntity<OdontologoSalidaDto> registrarOdontologo(@RequestBody @Valid OdontologoEntradaDto odontologoEntradaDto){
         OdontologoSalidaDto odontologoSalidaDto = odontologoService.registrarOdontologo(odontologoEntradaDto);
         return new ResponseEntity<>(odontologoSalidaDto, HttpStatus.CREATED);
     }
 
-    //GET
+
     @GetMapping("/listar")
     public ResponseEntity<List<OdontologoSalidaDto>>  listarOdontologos(){
         return new ResponseEntity<>(odontologoService.listarOdontologos(), HttpStatus.OK);
@@ -47,18 +42,16 @@ public class OdontologoController {
         return new ResponseEntity<>(odontologoService.buscarOdontologoPorId(id), HttpStatus.OK);
     }
 
-    //PUT -- actualización completa del objeto
 
     @PutMapping("/actualizar/{id}")
     public ResponseEntity<OdontologoSalidaDto> actualizarOdontologo(@RequestBody @Valid OdontologoEntradaDto odontologo, @PathVariable Long id) throws ResourceNotFoundException {
         return new ResponseEntity<>(odontologoService.actualizarOdontologo(odontologo, id), HttpStatus.OK);
-    } //COMO LO PRUEBO EN POSTMAN?
+    }
 
-    //DELETE
+
     @DeleteMapping("/eliminar")//localhost:8080/pacientes/eliminar?id=x
     public ResponseEntity<String> eliminarOdontologo(@RequestParam Long id) throws ResourceNotFoundException, BadRequestException {
             odontologoService.eliminarOdontologo(id);
-            return new ResponseEntity<>("Odontólogo eliminado correctamente", HttpStatus.NO_CONTENT); //funciona el endpoint pero no me esta mostrando este mensaje en consola
-
+            return new ResponseEntity<>("Odontólogo eliminado correctamente", HttpStatus.NO_CONTENT); 
     }
 }
