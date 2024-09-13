@@ -19,13 +19,10 @@ public class DomicilioEntradaDto {
     @NotBlank(message = "Debe especificarse el nombre de la provincia")
     @Size(min=1, max=30, message = "La provincia debe tener entre 1 y 30 caracteres")
     private String provincia;
-    //tiene todos los atributos menos ID
 
-    //constructor vacio
 
     public DomicilioEntradaDto() {
     }
-    //constructor completo
 
 
     public DomicilioEntradaDto(String calle, int numero, String localidad, String provincia) {
@@ -35,7 +32,6 @@ public class DomicilioEntradaDto {
         this.provincia = provincia;
     }
 
-    //Getters & setters
 
     public String getCalle() {
         return calle;
