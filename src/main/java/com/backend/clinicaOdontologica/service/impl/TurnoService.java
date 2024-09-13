@@ -128,7 +128,7 @@ public class TurnoService implements ITurnoService {
 
        if (turnoAActualizar == null) {
            LOGGER.error("No fue posible actualizar el turno porque no se encuentra en nuestra base de datos");
-
+            throw new BadRequestException("El turno no fue encontrado");
        }
 
        PacienteSalidaDto pacienteSalidaDto = pacienteService.buscarPacientePorDNI(turnoEntradaDto.getDniPaciente());
@@ -136,11 +136,11 @@ public class TurnoService implements ITurnoService {
 
 
        if (pacienteSalidaDto == null || odontologoSalidaDto == null) {
-           LOGGER.error("No se encontraron el paciente u odontólogo existentes. Paciente: {}, Odontólogo: {}",
+           LOGGER.error("Odontólogo y/o paciente no encontrado/s. Paciente: {}, Odontólogo: {}",
                    pacienteSalidaDto != null ? pacienteSalidaDto.getDni() : "No encontrado",
                    odontologoSalidaDto != null ? odontologoSalidaDto.getNumeroMatricula(): "No encontrado");
 
-           throw new BadRequestException("Paciente u odontólogo no encontrados");
+           throw new BadRequestException("Odontólogo y/o paciente no encontrado/s");
        }
 
        Paciente paciente = modelMapper.map(pacienteSalidaDto, Paciente.class);
