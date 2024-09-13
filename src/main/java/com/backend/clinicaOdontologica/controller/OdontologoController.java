@@ -49,7 +49,7 @@ public class OdontologoController {
     }
 
 
-    @DeleteMapping("/eliminar")//localhost:8080/pacientes/eliminar?id=x
+    @DeleteMapping("/eliminar")
     public ResponseEntity<String> eliminarOdontologo(@RequestParam Long id) throws ResourceNotFoundException, BadRequestException {
             odontologoService.eliminarOdontologo(id);
             return new ResponseEntity<>("Odontólogo eliminado correctamente", HttpStatus.NO_CONTENT); 

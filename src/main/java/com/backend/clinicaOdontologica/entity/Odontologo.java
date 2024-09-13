@@ -24,7 +24,7 @@ public class Odontologo {
     }
 
     public Odontologo(Long id,int numeroMatricula, String nombreOdontologo, String apellidoOdontologo) {
-        this.id =id;
+        this.id = id;
         this.numeroMatricula = numeroMatricula;
         this.nombreOdontologo = nombreOdontologo;
         this.apellidoOdontologo = apellidoOdontologo;
