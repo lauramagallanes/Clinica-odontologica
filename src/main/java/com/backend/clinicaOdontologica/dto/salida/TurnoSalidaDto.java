@@ -1,12 +1,10 @@
 package com.backend.clinicaOdontologica.dto.salida;
 
-import com.backend.clinicaOdontologica.entity.Odontologo;
-import com.backend.clinicaOdontologica.entity.Paciente;
 
 import java.time.LocalDateTime;
 
 public class TurnoSalidaDto {
-    // a la salida le voy a mostrar al paciente su nombre y apellido, ya que es mas visual (romi)
+
     private Long id;
     private String nombrePacienteSalidaDto;
     private String apellidoPacienteSalidaDto;
