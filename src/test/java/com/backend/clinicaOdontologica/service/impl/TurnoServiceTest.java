@@ -1,8 +1,5 @@
 package com.backend.clinicaOdontologica.service.impl;
 
-import com.backend.clinicaOdontologica.dto.entrada.DomicilioEntradaDto;
-import com.backend.clinicaOdontologica.dto.entrada.OdontologoEntradaDto;
-import com.backend.clinicaOdontologica.dto.entrada.PacienteEntradaDto;
 import com.backend.clinicaOdontologica.dto.salida.DomicilioSalidaDto;
 import com.backend.clinicaOdontologica.dto.salida.OdontologoSalidaDto;
 import com.backend.clinicaOdontologica.dto.salida.PacienteSalidaDto;
@@ -11,7 +8,6 @@ import com.backend.clinicaOdontologica.entity.Domicilio;
 import com.backend.clinicaOdontologica.entity.Odontologo;
 import com.backend.clinicaOdontologica.entity.Paciente;
 import com.backend.clinicaOdontologica.exceptions.BadRequestException;
-import com.backend.clinicaOdontologica.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -35,15 +31,15 @@ import static org.mockito.Mockito.times;
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
 public class TurnoServiceTest {
-    //creo el mock de TurnoRepository y lo que necesito
-    private final TurnoRepository turnoRepositoryMock = mock(TurnoRepository.class);// nos permite referenciar a los metodos del repository pero sin invocarlos realmente
+
+    private final TurnoRepository turnoRepositoryMock = mock(TurnoRepository.class);
     private final PacienteService pacienteServiceMock = mock(PacienteService.class);
     private final OdontologoService odontologoServiceMock = mock(OdontologoService.class);
     private final ModelMapper modelMapper = new ModelMapper();
 
     private final TurnoService turnoService = new TurnoService(turnoRepositoryMock, pacienteServiceMock, odontologoServiceMock, modelMapper);
 
-    //Declaro las variables que voy a usar en diferentes metodos, y luego las inicialiso dentro de setUp dentro de BeforeEach
+
     private static TurnoEntradaDto turnoEntradaDto;
     private static PacienteSalidaDto pacienteSalidaDto;
     private static OdontologoSalidaDto odontologoSalidaDto;
@@ -51,7 +47,7 @@ public class TurnoServiceTest {
     private static Turno turno;
 
     @BeforeAll
-    //Before requiere que el metodo asociado sea estático, a diferencia de BeforeEach
+
     static void setUp() {
 
         turnoEntradaDto = new TurnoEntradaDto(123, 13, LocalDateTime.of(2024, 9, 29, 12, 0, 30));

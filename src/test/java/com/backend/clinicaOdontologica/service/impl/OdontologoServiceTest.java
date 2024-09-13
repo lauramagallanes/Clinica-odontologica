@@ -7,7 +7,6 @@ import com.backend.clinicaOdontologica.exceptions.ResourceNotFoundException;
 import com.backend.clinicaOdontologica.repository.OdontologoRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.mockito.configuration.IMockitoConfiguration;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
@@ -35,7 +34,7 @@ class OdontologoServiceTest {
         odontologoEntradaDto =  new OdontologoEntradaDto(1234, "Mario", "Moreno");
     }
 
-    @Test //No pasa, me dice que el id es null
+    @Test
     void deberiaMandarAlRepositorioUnOdontologoDeApellidoMoreno_YRetornarUnaSalidaConSuId (){
         when(odontologoRepositoryMock.save(any(Odontologo.class))).thenReturn(odontologo);
 
@@ -46,7 +45,7 @@ class OdontologoServiceTest {
         assertEquals("Moreno", odontologoSalidaDto.getApellidoOdontologo());
         verify(odontologoRepositoryMock, times(1)).save(any(Odontologo.class));
     }
-    @Test //Este si pasa
+    @Test
     void deberiaBuscarOdontologoPorNumeroMatricula() {
         when(odontologoRepositoryMock.findByNumeroMatricula(1234)).thenReturn(Optional.of(odontologo));
 
@@ -57,7 +56,7 @@ class OdontologoServiceTest {
         verify(odontologoRepositoryMock, times(1)).findByNumeroMatricula(1234);
     }
 
-    @Test // Si pasa
+    @Test
     void deberiaEliminarOdontologo() {
         when(odontologoRepositoryMock.findById(1L)).thenReturn(Optional.of(odontologo));
         doNothing().when(odontologoRepositoryMock).deleteById(1L);
@@ -66,7 +65,7 @@ class OdontologoServiceTest {
         verify(odontologoRepositoryMock, times(1)).deleteById(1L);
     }
 
-    @Test// si pasa
+    @Test
     void deberiaActualizarOdontologoExistente() throws ResourceNotFoundException {
         when(odontologoRepositoryMock.findById(1L)).thenReturn(Optional.of(odontologo));
         when(odontologoRepositoryMock.save(any(Odontologo.class))).thenReturn(odontologo);
